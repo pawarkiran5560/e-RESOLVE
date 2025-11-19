@@ -1,0 +1,878 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>e-RESOLVE - Hostel Dashboard</title>
+    <link rel="stylesheet" href="department.css">
+</head>
+<body>
+    <div>
+        <img id="tkiet_banner_id" src="tkiet_banner.jpg" alt="tkiet banner">
+    </div>
+    <img id="tkiet_building_id" src="tkiet_building.webp" alt="tkiet building">
+    <div class="dashboard">
+        <div class="user_info">
+                <div class="user_icon" id="hostel-user-avatar">K</div>
+                <div  class="name-fitting">
+                    <div id="hostel-welcome-text" style="font-weight: 600; flex: 1; min-width: 0; overflow: auto; white-space: nowrap;" class="name-fitting">Welcome, Staff!</div>
+                    <div style="font-size: 20px; " id="hostel-user-id">hostel001</div>
+                </div>
+            </div>
+        <div class="dashboard-nav">
+            <button class="nav-btn active" onclick="showSection('hostel-new-complaints')">
+                🆕 New Complaints
+            </button>
+            <button class="nav-btn" onclick="showSection('hostel-in-progress-complaints')">
+                🔄️ In Progress Complaints
+            </button>
+            <button class="nav-btn" onclick="showSection('hostel-resolved-complaints')">
+                ✅ Resolved Complaints
+            </button>
+            <button class="nav-btn" onclick="logout()" style="position: absolute; bottom: 3%;">
+                🔚 Logout
+            </button>
+        </div>
+    </div>
+
+
+    <div class="right-content">
+        <div class="container">
+
+            <!--New Complaints -->
+            <div id="hostel-new-complaints" class="dashboard-section active" style="height: 75vh;">
+                <h2 class="section-title">New Complaints</h2>
+                <div class="filters">
+                    <select id="hostel-new-complaints-filter-priority" onchange="filterComplaints1()">
+                        <option value="">All Priorities</option>
+                        <option value="high">🟥 High</option>
+                        <option value="medium">🟨 Medium</option>
+                        <option value="low">🟩 Low</option>
+                    </select>
+                    <input type="text" id="hostel-new-complaints-search-input" placeholder="🔍 Search " style="width: 25vw;" onkeyup="searchComplaints1()">
+                </div>
+                
+                <div id="hostel-new-complaints-list"></div>
+            </div>
+
+            <!--In Progress Complaints -->
+            <div id="hostel-in-progress-complaints" class="dashboard-section" style="height: 75vh;">
+                <h2 class="section-title">In Progress Complaints</h2>
+                
+                <div class="filters">
+                    <select id="hostel-in-progress-filter-priority"  onchange="filterComplaints2()">
+                        <option value=""> All Priorities</option>
+                        <option value="high">🟥 High</option>
+                        <option value="medium">🟨 Medium</option>
+                        <option value="low">🟩 Low</option>
+                    </select>
+                    <input type="text" id="hostel-in-progress-search-input" placeholder="🔍 Search " style="width: 25vw;" onkeyup="searchComplaints2()">
+                </div>
+                
+                <div id="hostel-in-progress-complaints-list"></div>
+            </div>
+
+            <!--Resolved Complaints -->
+            <div id="hostel-resolved-complaints" class="dashboard-section" style="height: 75vh;">
+                <h2 class="section-title">Resolved Complaints</h2>
+                
+                <div class="filters">
+                    <select id="hostel-resolved-complaints-filter-priority"  onchange="filterComplaints3()">
+                        <option value=""> All Priorities</option>
+                        <option value="high">🟥 High</option>
+                        <option value="medium">🟨 Medium</option>
+                        <option value="low">🟩 Low</option>
+                    </select>
+                    <input type="text" id="hostel-resolved-complaints-search-input" placeholder="🔍 Search " style="width: 25vw;" onkeyup="searchComplaints3()">
+                </div>
+                
+                <div id="hostel-resolved-complaints-list"></div>
+            </div>
+
+
+        </div>
+
+
+    </div>
+    <!-- <script type="module" src="department.js"></script> -->
+
+
+    <script type="module" >
+
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js';
+        import { getAuth } from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js';
+        import { getFirestore, collection, doc, setDoc, getDocs, getDoc, updateDoc , query, where } from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js';
+
+        // Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyB3jC4rKypCYUc0NhlJa-1kuAkmFGxGS88",
+            authDomain: "e-resolve-tkiet.firebaseapp.com",
+            projectId: "e-resolve-tkiet",
+            storageBucket: "e-resolve-tkiet.firebasestorage.app",
+            messagingSenderId: "876305569079",
+            appId: "1:876305569079:web:14b890b4704b52e7cfb6b2",
+            measurementId: "G-7SEN34J28J"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        window.onload = function() {
+            checkLogin();
+            loadComplaints();
+        };
+
+        let students = [];
+        let complaints =[];
+        let currentUser = null;
+
+        function checkLogin() {
+            const userData = localStorage.getItem('currentUser');
+            if (!userData) {
+                window.location.href = 'login2.html';
+                return;
+            }
+            
+            currentUser = JSON.parse(userData);
+            if (currentUser.type !== 'hostel') {
+                alert('Access denied. This is a hostel portal.');
+                window.location.href = 'login2.html';
+                return;
+            }
+
+            document.getElementById('hostel-welcome-text').textContent = `Welcome, ${currentUser.name}!`;
+            document.getElementById('hostel-user-id').textContent = currentUser.id;
+            document.getElementById('hostel-user-avatar').textContent = currentUser.name.charAt(0).toUpperCase();
+        }
+
+
+        function logout() {
+            if (confirm('Are you sure you want to LOGOUT ?\n\n')) {
+                localStorage.removeItem('currentUser');
+                alert('Logged out successfully!\n\n');
+                window.location.href = 'login2.html';
+            }
+        }
+
+        function showSection(sectionId) {
+
+            document.querySelectorAll('.dashboard-section').forEach(section => {
+                section.classList.remove('active');
+            });
+            
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            document.getElementById(sectionId).classList.add('active');
+            
+            // event.target.classList.add('active');
+            document.querySelector(`[onclick="showSection('${sectionId}')"]`).classList.add('active');
+
+
+            switch(sectionId) {
+                case 'hostel-new-complaints':
+                    newComplaints();
+                    break;
+                case 'hostel-in-progress-complaints':
+                    progressComplaints();
+                    break;
+                case 'hostel-resolved-complaints':
+                    resolvedComplaints();
+                    break;
+                
+            }
+            
+        }
+
+        async function loadComplaints() {
+
+            complaints = []; // reset array
+
+            // const querySnapshot = await getDocs(collection(db, "complaints"));
+            const q = query(
+                collection(db, "complaints"),
+                where("category", "==", "hostel")
+            );
+
+            const querySnapshot = await getDocs(q);
+
+            querySnapshot.forEach((doc) => {
+                complaints.push(doc.data());
+            });
+
+            newComplaints();
+            progressComplaints();
+            resolvedComplaints();
+        }
+
+        function newComplaints() {
+            const container1 = document.getElementById('hostel-new-complaints-list');
+            const newComplaints = complaints.filter(c => c.status === 'pending');
+            
+            container1.innerHTML = '<div style="margin:100px 0 0 0 ; text-align:center; font-weight:bolder; font-size:20px;">Loading complaints...</div>';
+            
+            if (newComplaints.length === 0) {
+                container1.innerHTML = `
+                    <div style="margin:50px 0 0 0 ; text-align:center;">
+                        <h2>No complaints found</h2><br>
+                        <p  style="margin:-20px 0 0 0 ;">There is no <strong> New Complaint</strong> </p>
+                    </div>
+                `;
+                return;
+            }
+
+            newComplaints.sort((a, b) => {
+                const idA = parseInt(a.id.replace("COMP", ""));
+                const idB = parseInt(b.id.replace("COMP", ""));
+                return idB - idA;
+            });
+
+            setTimeout(() => {
+                container1.innerHTML = '';
+                newComplaints.sort((a, b) => new Date(b.date) - new Date(a.date))
+                    .forEach(complaint => {
+                        container1.appendChild(createComplaintCard(complaint, true));
+                });
+            }, 500);
+
+            
+        }
+
+        function progressComplaints() {
+            const container2 = document.getElementById('hostel-in-progress-complaints-list');
+            const progressComplaints = complaints.filter(c => c.status === 'progress');
+            
+            container2.innerHTML = '<div style="margin:100px 0 0 0 ; text-align:center; font-weight:bolder; font-size:20px;">Loading complaints...</div>';
+            
+            if (progressComplaints.length === 0) {
+                container2.innerHTML = `
+                    <div style="margin:50px 0 0 0 ; text-align:center;">
+                        <h2>No complaints found</h2><br>
+                        <p  style="margin:-20px 0 0 0 ;">There is no <strong>In-Progress Complaint</strong> </p>
+                    </div>
+                `;
+                return;
+            }
+
+            progressComplaints.sort((a, b) => {
+                const idA = parseInt(a.id.replace("COMP", ""));
+                const idB = parseInt(b.id.replace("COMP", ""));
+                return idB - idA;
+            });
+
+            setTimeout(() => {
+                container2.innerHTML = '';
+                progressComplaints.sort((a, b) => new Date(b.date) - new Date(a.date))
+                    .forEach(complaint => {
+                        container2.appendChild(createComplaintCard(complaint, true));
+                });
+            }, 500);
+        }
+
+        function resolvedComplaints() {
+            const container3 = document.getElementById('hostel-resolved-complaints-list');
+            const resolvedComplaints = complaints.filter(c => c.status === 'resolved');
+            
+            container3.innerHTML = '<div style="margin:100px 0 0 0 ; text-align:center; font-weight:bolder; font-size:20px;">Loading complaints...</div>';
+            
+            if (resolvedComplaints.length === 0) {
+                container3.innerHTML = `
+                    <div style="margin:50px 0 0 0 ; text-align:center;">
+                        <h2>No complaints found</h2><br>
+                        <p  style="margin:-20px 0 0 0 ;">There is no <strong>Resolved Complaint</strong> </p>
+                    </div>
+                `;
+                return;
+            }
+
+            resolvedComplaints.sort((a, b) => {
+                const idA = parseInt(a.id.replace("COMP", ""));
+                const idB = parseInt(b.id.replace("COMP", ""));
+                return idB - idA;
+            });
+
+            setTimeout(() => {
+                container3.innerHTML = '';
+                resolvedComplaints.sort((a, b) => new Date(b.date) - new Date(a.date))
+                    .forEach(complaint => {
+                        container3.appendChild(createComplaintCard(complaint, true));
+                });
+            }, 500);
+        }
+
+        function createComplaintCard(complaint) {
+            const card = document.createElement('div');
+            card.className = `complaint-card ${complaint.priority === 'high' ? 'high-priority' : ''} ${complaint.priority === 'low' ? 'resolved' : ''}`;
+            
+
+            const subcategoryLabels = {
+                'water': 'Water & Plumbing', 'electrical': 'Electrical Issues', 'mess': 'Mess & Food',
+                'cleaning': 'Cleanliness', 'security': 'Security', 'maintenance': 'Room Maintenance',
+                'lab': 'Lab Equipment', 'library': 'Library Services',
+                'classroom': 'Classroom Issues', 'exam': 'Examination', 'faculty': 'Faculty Related',
+                'academic': 'Academic Issues', 'administration': 'Administration','broken':'Broken Items' , 'stolen':'Stolen Items','other':'Other Issues'
+            };
+            
+            
+            card.innerHTML = `
+                <div class="complaint-header"  style="display: flex;">
+                    <div class="complaint-id ${complaint.priority === 'high' ? 'complaint-header-high' : ''} ${complaint.priority === 'low' ? 'complaint-header-low' : ''}" >
+                        ${subcategoryLabels[complaint.subcategory] || complaint.subcategory}  <br>
+                        <span style="font-size: 15px;">${complaint.id}</span>
+                    </div>
+
+
+
+                    <!-- <div  style="position:absolute ; right: 310px;">
+                         <span>${complaint.proof && complaint.proof.length > 0 ? `<span><img src="download3.png" ><span  style="font-weight:bolder;"> PDF</span></span>` : ''}</span> 
+                        
+                        <span>
+                            ${complaint.proof ? `
+                                    <a href="${complaint.proof}" download="complaint-${complaint.id}.pdf" style="text-decoration:none; color:black;">
+                                        <span>
+                                            <img src="download3.png" style="width:20px; vertical-align:middle;">
+                                            <span style="font-weight:bolder; cursor:pointer;"> PDF</span>
+                                        </span>
+                                    </a>
+                            `:``}  
+                        </span>
+                    </div> -->
+                    <!-- <div  style="position:absolute ; right: 30px;">
+                        <span class="status-badge status-${complaint.status}">
+                            ${complaint.status === 'pending' ? '⏳' : complaint.status === 'progress' ? '🔄' : '✅'} 
+                            ${complaint.status.toUpperCase()}
+                        </span>
+                        <span class="priority-badge priority-${complaint.priority}">
+                            ${complaint.priority === 'high' ? '🔴' : complaint.priority === 'medium' ? '🔵' : '🟢'} 
+                            ${complaint.priority.toUpperCase()}
+                        </span>
+                    </div> -->
+
+
+
+
+                    <div style="position:absolute ; right: 30px;">
+                        <span style="margin:0 10px 0 0;">
+                            ${complaint.proof ? `
+                                    <a href="${complaint.proof}" download="complaint-${complaint.id}.pdf" style="text-decoration:none; color:black;">
+                                        <span>
+                                            <img src="download3.png" style="width:20px; vertical-align:middle;">
+                                            <span style="font-weight:bolder; cursor:pointer;"> PDF</span>
+                                        </span>
+                                    </a>
+                            `:``}  
+                        </span>
+                        
+                        <span class="status-badge status-${complaint.status}" id="status-badge-hide-${complaint.id}" onclick="openStatusMenu('${complaint.id}')">
+                            ${complaint.status === 'pending' ? '⏳' : complaint.status === 'progress' ? '🔄' : '✅'} 
+                            ${complaint.status.toUpperCase()}
+                        </span>
+
+                        <select class="status-badge status-${complaint.status}" id="status-select-${complaint.id}" style="display:none; margin-left:10px;"   onchange="updateStatus('${complaint.id}')">
+                            <option value="pending" ${complaint.status === 'pending' ? 'selected' : ''}>⏳ Pending</option>
+                            <option value="progress" ${complaint.status === 'progress' ? 'selected' : ''}>🔄 In Progress</option>
+                            <option value="resolved" ${complaint.status === 'resolved' ? 'selected' : ''}>✅ Resolved</option>
+                        </select>
+
+                        <span class="priority-badge priority-${complaint.priority}" id="priority-badge-hide-${complaint.id}" onclick="openPriorityMenu('${complaint.id}')">
+                            ${complaint.priority === 'high' ? '🔴' : complaint.priority === 'medium' ? '🔵' : '🟢'} 
+                            ${complaint.priority.toUpperCase()}
+                        </span>
+
+                        <select class="priority-badge priority-${complaint.priority}" id="priority-select-${complaint.id}" style="display:none; margin-left:10px;"   onchange="updatePriority('${complaint.id}')">
+                            <option value="low" ${complaint.priority === 'low' ? 'selected' : ''}>🟢 Low</option>
+                            <option value="medium" ${complaint.priority === 'medium' ? 'selected' : ''}>🔵 Medium</option>
+                            <option value="high" ${complaint.priority === 'high' ? 'selected' : ''}>🔴 High</option>
+                        </select>
+
+                        <!-- Restrict student -->
+                        <button class="btn priority-${complaint.priority}"" style="margin-left:10px; padding:7px;" onclick="openRestrictMenu('${complaint.id}', '${complaint.studentId}')">
+                            ❌ Restrict Student
+                        </button>
+                    </div>
+
+                </div>
+                ${complaint.status === 'pending' &&  complaint.studentId === currentUser.id? `
+                    <div style=" position: absolute; right: 20px; top: 80px;">
+                        <button class="btn btn-success"  onclick="editComplaint('${complaint.id}')" > Edit Complaint </button>
+                    </div>
+                ` : ''}
+                
+                <div class="complaint-content">
+                    <h2>${complaint.subject}</h2>
+                    <p>${complaint.description}</p>
+                    ${complaint.location ? `<p><strong>Location:</strong> ${complaint.location}</p>` : ''}
+                </div>
+
+                ${complaint.response ? `
+                    <div class="response-section complaint-card  ${complaint.priority === 'high' ? 'high-priority' : ''} ${complaint.priority === 'low' ? 'resolved' : ''}">
+                        <strong style="font-weight:25px;">Complaint Response:</strong><br>
+                        <p class="student-feedback" style="margin:0 0 0 50px;">${complaint.response}</p>
+                         ${complaint.responseDate ? `<br><small><strong>Response Date:</strong> ${complaint.responseDate}</small>` : ''}<br>
+                        <button class="btn btn-cancel"  onclick="deleteResponse('${complaint.id}')">Delete Feedback</button>
+                    </div>
+                ` : `${complaint.status === 'resolved' && !complaint.response ? `
+                    <button class="btn btn-success"  onclick="document.getElementById('response-form-${complaint.id}').style.display = 'block';">
+                        Give response
+                    </button>
+
+                    <p class="student-feedback">${complaint.response || ''}</p>
+                    <div class="feedback-form" id="response-form-${complaint.id}" style="display: none;">
+                        <h5>Please provide your response</h5>
+                        <textarea 
+                            id="response-${complaint.id}" 
+                            placeholder=" please provide your response" 
+                            rows="3" 
+                            style="width: 100%; padding: 12px; border: 2px solid ; border-radius: 8px; resize: vertical; margin-bottom: 10px; font-size:18px;"
+                        ></textarea>
+                        <button class="btn btn-success" onclick="submitResponse('${complaint.id}')">
+                            ✔️ Submit response
+                        </button>
+                    </div>
+                ` : ''} 
+
+                `}
+
+                ${complaint.feedback ? `
+                    <div class="feedback-section complaint-card  ${complaint.priority === 'high' ? 'high-priority' : ''} ${complaint.priority === 'low' ? 'resolved' : ''}">
+                        <strong>Student Feedback:</strong><br>
+                        <p class="student-feedback">${complaint.feedback}</p> 
+                    </div>
+                ` : ` `}
+
+                <div class="complaint-meta">
+                    <span><strong>Category:</strong> ${complaint.category.toUpperCase()}</span>
+                    <span><strong>Submitted:</strong> ${complaint.date}</span>
+                    <span><strong>Student:</strong> ${complaint.hide === 'no' ? `${complaint.studentName.toUpperCase()} (${complaint.studentId})` : 'Anonymous'}</span>
+                </div>
+                
+            `;
+            
+            return card;
+        }
+
+        async function deleteResponse(complaintId) {
+            if (!confirm('Do you want to delete your response?')) return;
+
+            const complaint = complaints.find(c => c.id === complaintId);
+            if (!complaint) {
+                alert('Complaint not found!');
+                return;
+            }
+
+            const complaintRef = doc(db, "complaints", complaintId);
+            await updateDoc(complaintRef, {
+                response: '',
+                responseDate: ''
+            });
+            // complaint.feedback = '';
+
+            loadComplaints();
+
+        }
+
+        async function submitResponse(complaintId) {
+            const response = document.getElementById(`response-${complaintId}`).value.trim();
+            if (!response) {
+                alert('Please enter your response .');
+                return;
+            }
+            
+            if (response.length < 10) {
+                alert('Please provide more detailed response (at least 10 characters).');
+                return;
+            }
+            
+            const complaint = complaints.find(c => c.id === complaintId);
+            if (complaint) {
+                complaint.response = response;
+                complaint.responseDate = new Date().toISOString().split('T')[0];
+                
+
+                const complaintRef = doc(db, "complaints", complaintId);
+                await updateDoc(complaintRef, {
+                    response: complaint.response,
+                    responseDate: complaint.responseDate
+                });
+                loadComplaints();
+                const responseElement = document.getElementById(`response-${complaintId}`);
+                if (responseElement) {
+                    responseElement.style.background = '#d4edda';
+                    responseElement.style.border = '2px solid #28a745';
+                    responseElement.value = 'Response submitted successfully!';
+                    // responseElement.disabled = true;
+                }
+            }
+        }
+
+        function openStatusMenu(id) {
+            document.getElementById(`status-select-${id}`).style.display = "inline-block";
+            document.getElementById(`status-badge-hide-${id}`).style.display = "none";
+        }
+
+        function openPriorityMenu(id) {
+            document.getElementById(`priority-select-${id}`).style.display = "inline-block";
+            document.getElementById(`priority-badge-hide-${id}`).style.display = "none";
+        }
+
+        async function updateStatus(id) {
+            const newStatus = document.getElementById(`status-select-${id}`).value;
+            const complaintRef = doc(db, "complaints", id);
+
+            await updateDoc(complaintRef, { status: newStatus });
+
+            alert("Status updated!");
+            loadComplaints();
+        }
+
+        async function updatePriority(id) {
+            const newPriority = document.getElementById(`priority-select-${id}`).value;
+            const complaintRef = doc(db, "complaints", id);
+
+            await updateDoc(complaintRef, { priority: newPriority });
+
+            alert("Priority updated!");
+            loadComplaints();
+        }
+
+        function openRestrictMenu(complaintId, studentId) {
+            let days = prompt("Restrict this student for how many days? (1–100)");
+
+            if (days === null) return; // cancelled
+
+            days = days.trim();
+
+            // Check: number only
+            if (!/^\d+$/.test(days)) {
+                alert("Please enter a valid number.");
+                return;
+            }
+
+            days = parseInt(days);
+
+            // Check: range 1–100
+            if (days < 1 || days > 100) {
+                alert("Days must be between 1 and 100.");
+                return;
+            }
+
+            restrictStudent(studentId, days, complaintId);
+        }
+
+        async function restrictStudent(studentId, days, complaintId) {
+            const endDate = new Date();
+            endDate.setDate(endDate.getDate() + days);
+
+            const studentRef = doc(db, "students", studentId);
+
+            await updateDoc(studentRef, {
+                restrictedUntil: endDate.toISOString()
+            });
+
+            alert(`Student restricted for ${days} days.`);
+            loadComplaints();
+        }
+
+        
+
+        function filterComplaints1() {
+            const priority1 = document.getElementById('hostel-new-complaints-filter-priority').value;
+            
+            // let filteredComplaints1 = [...complaints];
+            
+            // if (priority1) {
+            //     filteredComplaints1 = filteredComplaints1.filter(c => c.status === "pending" && c.priority === priority1);
+            // }
+            
+            let filteredComplaints1 = complaints.filter(c => c.status === "pending");
+
+            if (priority1) {
+                filteredComplaints1 = filteredComplaints1.filter(c => c.priority === priority1);
+            }
+
+            const container1 = document.getElementById('hostel-new-complaints-list');
+            container1.innerHTML = '';
+            
+            if (filteredComplaints1.length === 0) {
+                container1.innerHTML = `
+                    <div  style="margin:50px 0 0 0 ; text-align:center;">
+                        <h3>No complaints found</h3>
+                        <p>No complaints match your <strong>"${priority1}"</strong> filter criteria.</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            filteredComplaints1.sort((a, b) => {
+                const idA = parseInt(a.id.replace("COMP", ""));
+                const idB = parseInt(b.id.replace("COMP", ""));
+                return idB - idA;
+            });
+
+            filteredComplaints1.forEach(complaint => {
+                container1.appendChild(createComplaintCard(complaint, false));
+            });
+
+            // loadComplaints();
+        }
+
+        function filterComplaints2() {
+            const priority2 = document.getElementById('hostel-in-progress-filter-priority').value;
+            
+            // let filteredComplaints2 = [...complaints];
+
+            // if (priority2) {
+            //     filteredComplaints2 = filteredComplaints2.filter(c => c.status === "progress" && c.priority === priority2);
+            // }
+
+            let filteredComplaints2 = complaints.filter(c => c.status === "progress");
+
+            if (priority2) {
+                filteredComplaints2 = filteredComplaints2.filter(c => c.priority === priority2);
+            }
+            
+            const container2 = document.getElementById('hostel-in-progress-complaints-list');
+            container2.innerHTML = '';
+            
+            if (filteredComplaints2.length === 0) {
+                container2.innerHTML = `
+                    <div  style="margin:50px 0 0 0 ; text-align:center;">
+                        <h3>No complaints found</h3>
+                        <p>No complaints match your <strong>"${priority2}"</strong> filter criteria.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            filteredComplaints2.sort((a, b) => {
+                const idA = parseInt(a.id.replace("COMP", ""));
+                const idB = parseInt(b.id.replace("COMP", ""));
+                return idB - idA;
+            });
+            
+            filteredComplaints2.forEach(complaint => {
+                container2.appendChild(createComplaintCard(complaint, false));
+            });
+
+            // loadComplaints();
+        }
+
+        function filterComplaints3() {
+            const priority3 = document.getElementById('hostel-resolved-complaints-filter-priority').value;
+            
+            // let filteredComplaints3 = [...complaints];
+
+            // if (priority3) {
+            //     filteredComplaints3 = filteredComplaints3.filter(c => c.status === "resolved" && c.priority === priority3);
+            // }
+
+            let filteredComplaints3 = complaints.filter(c => c.status === "resolved");
+
+            if (priority3) {
+                filteredComplaints3 = filteredComplaints3.filter(c => c.priority === priority3);
+            }
+            
+            const container3 = document.getElementById('hostel-resolved-complaints-list');
+            container3.innerHTML = '';
+            
+            if (filteredComplaints3.length === 0) {
+                container3.innerHTML = `
+                    <div  style="margin:50px 0 0 0 ; text-align:center;">
+                        <h3>No complaints found</h3>
+                        <p>No complaints match your <strong>"${priority3}"</strong> filter criteria.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            filteredComplaints3.sort((a, b) => {
+                const idA = parseInt(a.id.replace("COMP", ""));
+                const idB = parseInt(b.id.replace("COMP", ""));
+                return idB - idA;
+            });
+            
+            filteredComplaints3.forEach(complaint => {
+                container3.appendChild(createComplaintCard(complaint, false));
+            });
+
+            // loadComplaints();
+        }
+
+        const subcategoryLabels = {
+            'water': 'Water & Plumbing', 'electrical': 'Electrical Issues', 'mess': 'Mess & Food',
+            'cleaning': 'Cleanliness', 'security': 'Security', 'maintenance': 'Room Maintenance',
+            'lab': 'Lab Equipment', 'library': 'Library Services',
+            'classroom': 'Classroom Issues', 'exam': 'Examination', 'faculty': 'Faculty Related',
+            'academic': 'Academic Issues', 'administration': 'Administration','broken':'Broken Items' , 'stolen':'Stolen Items','other':'Other Issues'
+        };
+
+        function searchComplaints1() {
+            const searchTerm1 = document.getElementById('hostel-new-complaints-search-input').value.toLowerCase();
+            
+            if (!searchTerm1) {
+                newComplaints();
+                return;
+            }
+            
+            let filteredComplaint1 = complaints.filter(c => c.status === "pending");
+
+            const searchResults1 = filteredComplaint1.filter(complaint => 
+                complaint.id.toLowerCase().includes(searchTerm1) ||
+                complaint.subject.toLowerCase().includes(searchTerm1) ||
+                complaint.location.toLowerCase().includes(searchTerm1) ||
+                complaint.studentId.toLowerCase().includes(searchTerm1) ||
+                complaint.studentName.toLowerCase().includes(searchTerm1) ||
+                subcategoryLabels[complaint.subcategory].toLowerCase().includes(searchTerm1)
+            );
+
+
+            
+            const containers1 = document.getElementById('hostel-new-complaints-list');
+            containers1.innerHTML = '';
+            
+            if (searchResults1.length === 0) {
+                containers1.innerHTML = `
+                    <div  style="margin:50px 0 0 0 ; text-align:center;">
+                        <h3>No search results</h3>
+                        <p>No complaints found matching <strong>"${searchTerm1}"</strong>.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            searchResults1.sort((a, b) => {
+                const idA = parseInt(a.id.replace("COMP", ""));
+                const idB = parseInt(b.id.replace("COMP", ""));
+                return idB - idA;
+            });
+            
+            searchResults1.forEach(complaint => {
+                containers1.appendChild(createComplaintCard(complaint, false));
+            });
+        }
+
+        function searchComplaints2() {
+            const searchTerm2 = document.getElementById('hostel-in-progress-search-input').value.toLowerCase();
+            
+            if (!searchTerm2) {
+                progressComplaints();
+                return;
+            }
+            
+            let filteredComplaint2 = complaints.filter(c => c.status === "progress");
+
+            const searchResults2 = filteredComplaint2.filter(complaint => 
+                complaint.id.toLowerCase().includes(searchTerm2) ||
+                complaint.subject.toLowerCase().includes(searchTerm2) ||
+                complaint.location.toLowerCase().includes(searchTerm2) ||
+                complaint.studentId.toLowerCase().includes(searchTerm2) ||
+                complaint.studentName.toLowerCase().includes(searchTerm2) ||
+                subcategoryLabels[complaint.subcategory].toLowerCase().includes(searchTerm2)
+            );
+
+
+            
+            const containers2 = document.getElementById('hostel-in-progress-complaints-list');
+            containers2.innerHTML = '';
+            
+            if (searchResults2.length === 0) {
+                containers2.innerHTML = `
+                    <div  style="margin:50px 0 0 0 ; text-align:center;">
+                        <h3>No search results</h3>
+                        <p>No complaints found matching <strong>"${searchTerm2}"</strong>.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            searchResults2.sort((a, b) => {
+                const idA = parseInt(a.id.replace("COMP", ""));
+                const idB = parseInt(b.id.replace("COMP", ""));
+                return idB - idA;
+            });
+            
+            searchResults2.forEach(complaint => {
+                containers2.appendChild(createComplaintCard(complaint, false));
+            });
+        }
+
+        function searchComplaints3() {
+            const searchTerm3 = document.getElementById('hostel-resolved-complaints-search-input').value.toLowerCase();
+            
+            if (!searchTerm3) {
+                resolvedComplaints();
+                return;
+            }
+            
+            let filteredComplaint3 = complaints.filter(c => c.status === "resolved");
+
+            const searchResults3 = filteredComplaint3.filter(complaint => 
+                complaint.id.toLowerCase().includes(searchTerm3) ||
+                complaint.subject.toLowerCase().includes(searchTerm3) ||
+                complaint.location.toLowerCase().includes(searchTerm3) ||
+                complaint.studentId.toLowerCase().includes(searchTerm3) ||
+                complaint.studentName.toLowerCase().includes(searchTerm3) ||
+                subcategoryLabels[complaint.subcategory].toLowerCase().includes(searchTerm3)
+            );
+
+
+            
+            const containers3 = document.getElementById('hostel-resolved-complaints-list');
+            containers3.innerHTML = '';
+            
+            if (searchResults3.length === 0) {
+                containers3.innerHTML = `
+                    <div  style="margin:50px 0 0 0 ; text-align:center;">
+                        <h3>No search results</h3>
+                        <p>No complaints found matching <strong>"${searchTerm3}"</strong>.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            searchResults3.sort((a, b) => {
+                const idA = parseInt(a.id.replace("COMP", ""));
+                const idB = parseInt(b.id.replace("COMP", ""));
+                return idB - idA;
+            });
+            
+            searchResults3.forEach(complaint => {
+                containers3.appendChild(createComplaintCard(complaint, false));
+            });
+        }
+        
+        window.showSection = showSection;
+        window.logout = logout;
+        // window.addStudentForm = addStudentForm;
+        // window.cancelStudentForm = cancelStudentForm;
+        // window.editStudentDetails = editStudentDetails;
+        // window.saveStudent = saveStudent;
+        // window.updateStudent = updateStudent;
+        // window.editStudent = editStudent;
+        // window.searchStudent = searchStudent;
+        // window.filterStudent = filterStudent;
+        window.deleteResponse = deleteResponse;
+        window.submitResponse = submitResponse;
+        window.restrictStudent = restrictStudent;
+        window.openRestrictMenu = openRestrictMenu;
+        window.updateStatus = updateStatus;
+        window.updatePriority = updatePriority;
+        window.openPriorityMenu = openPriorityMenu;
+        window.openStatusMenu = openStatusMenu;
+        // window.filterNewComplaints = filterNewComplaints;
+        window.filterComplaints1 = filterComplaints1;
+        window.filterComplaints2 = filterComplaints2;
+        window.filterComplaints3 = filterComplaints3;
+        window.searchComplaints1 = searchComplaints1;
+        window.searchComplaints2 = searchComplaints2;
+        window.searchComplaints3 = searchComplaints3;
+
+            
+
+    </script> 
+</body>
+</html>
+
+

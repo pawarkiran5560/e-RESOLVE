@@ -1,0 +1,1431 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>e-RESOLVE - Department Dashboard</title>
+    <link rel="stylesheet" href="department.css">
+</head>
+<body>
+    <div>
+        <img id="tkiet_banner_id" src="tkiet_banner.jpg" alt="tkiet banner">
+    </div>
+    <img id="tkiet_building_id" src="tkiet_building.webp" alt="tkiet building">
+    <div class="dashboard">
+        <div class="user_info">
+                <div class="user_icon" id="dept-user-avatar">K</div>
+                <div  class="name-fitting">
+                    <div id="dept-welcome-text" style="font-weight: 600; flex: 1; min-width: 0; overflow: auto; white-space: nowrap;" class="name-fitting">Welcome, Staff!</div>
+                    <div style="font-size: 20px; " id="dept-user-id">DEPT001</div>
+                </div>
+            </div>
+        <div class="dashboard-nav">
+            <button class="nav-btn active" onclick="showSection('dept-new-complaints')">
+                🆕 New Complaints
+            </button>
+            <button class="nav-btn" onclick="showSection('dept-in-progress-complaints')">
+                🔄️ In Progress Complaints
+            </button>
+            <button class="nav-btn" onclick="showSection('dept-resolved-complaints')">
+                ✅ Resolved Complaints
+            </button>
+            <button class="nav-btn" onclick="showSection('dept-manage-student')">
+                👤 Student Management
+            </button>
+            <button class="nav-btn" onclick="logout()" style="position: absolute; bottom: 3%;">
+                🔚 Logout
+            </button>
+        </div>
+    </div>
+
+
+    <div class="right-content">
+        <div class="container">
+
+            <!--New Complaints -->
+            <div id="dept-new-complaints" class="dashboard-section active" style="height: 75vh;">
+                <h2 class="section-title">New Complaints</h2>
+                <div class="filters">
+                    <select id="dept-new-complaints-filter-priority" onchange="filterComplaints1()">
+                        <option value="">All Priorities</option>
+                        <option value="high">🟥 High</option>
+                        <option value="medium">🟨 Medium</option>
+                        <option value="low">🟩 Low</option>
+                    </select>
+                    <input type="text" id="dept-new-complaints-search-input" placeholder="🔍 Search " style="width: 25vw;" onkeyup="searchComplaints1()">
+                </div>
+                
+                <div id="dept-new-complaints-list"></div>
+            </div>
+
+            <!--In Progress Complaints -->
+            <div id="dept-in-progress-complaints" class="dashboard-section" style="height: 75vh;">
+                <h2 class="section-title">In Progress Complaints</h2>
+                
+                <div class="filters">
+                    <select id="dept-in-progress-filter-priority"  onchange="filterComplaints2()">
+                        <option value=""> All Priorities</option>
+                        <option value="high">🟥 High</option>
+                        <option value="medium">🟨 Medium</option>
+                        <option value="low">🟩 Low</option>
+                    </select>
+                    <input type="text" id="dept-in-progress-search-input" placeholder="🔍 Search " style="width: 25vw;" onkeyup="searchComplaints2()">
+                </div>
+                
+                <div id="dept-in-progress-complaints-list"></div>
+            </div>
+
+            <!--Resolved Complaints -->
+            <div id="dept-resolved-complaints" class="dashboard-section" style="height: 75vh;">
+                <h2 class="section-title">Resolved Complaints</h2>
+                
+                <div class="filters">
+                    <select id="dept-resolved-complaints-filter-priority"  onchange="filterComplaints3()">
+                        <option value=""> All Priorities</option>
+                        <option value="high">🟥 High</option>
+                        <option value="medium">🟨 Medium</option>
+                        <option value="low">🟩 Low</option>
+                    </select>
+                    <input type="text" id="dept-resolved-complaints-search-input" placeholder="🔍 Search " style="width: 25vw;" onkeyup="searchComplaints3()">
+                </div>
+                
+                <div id="dept-resolved-complaints-list"></div>
+            </div>
+
+            <!-- Student Manage -->
+            <div id="dept-manage-student" class="dashboard-section " style="height: 75vh;">
+                <h2 class="section-title">Student Management</h2>
+
+                <button id="dept-add-student-button" class="btn" style="position: relative; left: 82.5%;" onclick="addStudentForm()">Add Student</button>
+
+                <!-- Add student details Form Modal -->
+                <div id="dept-add-student-form" style="display: none;">
+                    <hr style="margin: 10px 0 0 0; height: 3px; width: 70.6vw;  background-color: black;">
+                    <hr style="margin: 3px 0 30px 0; height: 3px; width: 70.6vw;  background-color: black;">
+                    <h2 class="section-title">👤 Add Student</h2><br>
+                    <form id="dept-profile-form">
+                        <div class="form-group">
+                                <label>🆔 Student GR No</label>
+                                <input type="text" id="dept-student-profile-gr-no" placeholder="22UGCS21470" >
+                            </div>
+                        <div class="form-group">
+                            <label>👤 Full Name</label>
+                            <input type="text" id="dept-profile-name" placeholder="Enter your full name">
+                        </div>
+                        <div class="form-group">
+                            <label>📧 Email Address</label>
+                            <input type="email" id="dept-profile-email" placeholder="your_email@gmail.com">
+                        </div>
+                        <div class="form-group">
+                            <label>📱 Phone Number</label>
+                            <input type="tel" id="dept-profile-phone" placeholder="9317586304">
+                        </div>
+                        <div class="form-group">
+                            <label>🏢 Department</label>
+                            <select id="dept-profile-department">
+                                <option value="">Select Your Department</option>
+                                <option value="computer-science">Computer Science Engineering</option>
+                                <option value="electronics">Electronics & Communication</option>
+                                <option value="mechanical">Mechanical Engineering</option>
+                                <option value="civil">Civil Engineering</option>
+                                <option value="electrical">Electrical Engineering</option>
+                                <option value="chemical">Chemical Engineering</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>📚 Academic Year</label>
+                            <select id="dept-profile-year">
+                                <option value="">Select Your Year</option>
+                                <option value="1">1️⃣ First Year</option>
+                                <option value="2">2️⃣ Second Year</option>
+                                <option value="3">3️⃣ Third Year</option>
+                                <option value="4">4️⃣ Fourth Year</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>🏛️ Hostel Block</label>
+                            <!-- <input type="text" id="dept-profile-hostel" readonly> -->
+                            <select id="dept-profile-hostel">
+                                <option value="" >Select Hostel Block</option>
+                                <option value="nohostel" >Not In Hostel</option>
+                                <option value="phule">Phule (Boys)</option>
+                                <option value="jawahar">Jawahar (Boys)</option>
+                                <option value="gandhi">Gandhi (Boys)</option>
+                                <option value="shivaji">Chh. Shivaji (Boys)</option>
+                                <option value="tilak">Lok. Tilak (Boys)</option>
+                                <option value="vishveshwarya">Shri. Vishveshwarya (Boys)</option>
+                                <option value="raman">C. V.Raman (Boys)</option>
+                                <option value="bhabha">Homi Bhabha (Boys)</option>
+                                <option value="bhaskar">Bhaskar (Boys)</option>
+                                <option value="savitri">Savitri (Girls)</option>
+                                <option value="saraswati">Saraswati (Girls)</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>🚪 Room Number</label>
+                            <input type="text" id="dept-profile-room" placeholder="e.g  --> 17" >
+                        </div>
+                        <button type="button" class="btn" onclick="saveStudent()">
+                            ✔️ Save Profile
+                        </button>
+                        <button type="button" class="btn btn-cancel" onclick="cancelStudentForm()">
+                            ❌ cancel
+                        </button>
+                    </form>
+                </div>
+
+                <hr style="margin: 10px 0 0 0; height: 3px; width: 70.6vw;  background-color: black;">
+                <hr style="margin: 3px 0 0px 0; height: 3px; width: 70.6vw;  background-color: black;">
+
+                <!-- filters  -->
+                <div>
+                    <div class="filters" style="margin: 0 -30px 30px -20px;">
+                        <!-- onchange="filterStudent()" onchange="applyFilter('department')"-->
+                        <select id="dept-student-filter-category-department"   onchange="filterStudent()">
+                            <option value="">All Department</option>
+                            <option value="computer-science">Computer Science & Engineering</option>
+                            <option value="electronics">Electronics & Communication</option>
+                            <option value="mechanical">Mechanical Engineering</option>
+                            <option value="civil">Civil Engineering</option>
+                            <option value="electrical">Electrical Engineering</option>
+                            <option value="chemical">Chemical Engineering</option>
+                        </select>
+                        <!-- onchange="filterStudent()" onchange="applyFilter('hostel')"-->
+                        <select id="dept-student-filter-category-hostel"   onchange="filterStudent()">
+                            <option value="">All Hostel </option>
+                            <option value="phule">Phule (Boys)</option>
+                            <option value="jawahar">Jawahar (Boys)</option>
+                            <option value="gandhi">Gandhi (Boys)</option>
+                            <option value="shivaji">Chh. Shivaji (Boys)</option>
+                            <option value="tilak">Tilak (Boys)</option>
+                            <option value="vishveshwarya">Shri. Vishveshwarya (Boys)</option>
+                            <option value="raman">C. V.Raman (Boys)</option>
+                            <option value="bhabha">Homi Bhabha (Boys)</option>
+                            <option value="bhaskar">Bhaskar (Boys)</option>
+                            <option value="savitri">Savitri (Girls)</option>
+                            <option value="saraswati">Saraswati (Girls)</option>
+                        </select>
+                        <!-- onchange="filterStudent()" onchange="applyFilter('year')" -->
+                        <select id="dept-student-filter-category-year" onchange="filterStudent()">
+                            <option value="">Select Year</option>
+                            <option value="1">1️⃣ First Year</option>
+                            <option value="2">2️⃣ Second Year</option>
+                            <option value="3">3️⃣ Third Year</option>
+                            <option value="4">4️⃣ Fourth Year</option>
+                        </select>
+                        <!-- onkeyup="searchStudent()" oninput="applyFilter('search')" -->
+                        <input type="text" id="dept-student-filter-category-search-input" placeholder="🔍 Search " style="width: 20.7vw;" onkeyup="searchStudent()">
+                    </div>
+
+                    <div class="dept-student-data" style="overflow-x: auto; margin: -60px 0 0 0;" id="student-details-content-div">
+                        <table style="border-collapse: collapse; width: 175vw;  margin: 50px 0 0 0; "  class="dept-student-table" id="dept-add-student-table">
+                            <thead>
+                                <tr>
+                                    <th style="width: 15vw;">Student ID</th>
+                                    <th style="width: 20vw;">Student Gr Number</th> 
+                                    <th style="width: 30vw;">Student Name</th> 
+                                    <th style="width: 25vw;">Email Address</th>
+                                    <th style="width: 20vw;">Phone Number</th>
+                                    <th style="width: 25vw;">Department</th>
+                                    <th style="width: 15vw;">Academic Year</th>
+                                    <th style="width: 25vw;">Hostel Name</th>
+                                    <th style="width: 10vw;">Room No</th>
+                                    <th style="width: 10vw;">Edit Details</th>
+                                </tr>
+                            </thead>
+                            <tbody id="dept-add-student-table-body">
+                                <!-- <tr>
+                                    <td>22UGCS21470 </td>
+                                    <td>kiran narayan pawar</td> 
+                                    <td>pawarkiran5560@gmail.com</td>
+                                    <td>+91 1234567890</td>
+                                    <td>Computer Science and Engineering</td>
+                                    <td>4th Year</td>
+                                    <td>Lokamanya Tilak</td>
+                                    <td>15</td>
+                                    <td><button class="update-btn btn">Edit Details</button></td>
+                                </tr> -->
+                            </tbody>
+                            
+                        </table>
+                    </div>
+                    
+                </div>
+
+                <!-- Edit student details Form Modal -->
+                <div id="edit-student-detail" class="modal" style="padding: 3vw 0 0 26vw;">
+                    <div class="modal-content">
+                        <h3 style="margin-bottom: 30px; font-size: 1.8rem;">Edit student details</h3>
+                        <form id="edit-dept-profile-form">
+                            <div class="form-group">
+                                <label>🆔 Student GR No</label>
+                                <input type="text" id="edit-dept-student-profile-gr-no" placeholder="22UGCS21470" >
+                            </div>
+                            <div class="form-group">
+                                <label>👤 Full Name</label>
+                                <input type="text" id="edit-dept-profile-name" placeholder="Enter your full name">
+                            </div>
+                            <div class="form-group">
+                                <label>📧 Email Address</label>
+                                <input type="email" id="edit-dept-profile-email" placeholder="your_email@gmail.com">
+                            </div>
+                            <div class="form-group">
+                                <label>📱 Phone Number</label>
+                                <input type="tel" id="edit-dept-profile-phone" placeholder="9317586304">
+                            </div>
+                            <div class="form-group">
+                                <label>🏢 Department</label>
+                                <select id="edit-dept-profile-department">
+                                    <option value="">Select Your Department</option>
+                                    <option value="computer-science">Computer Science Engineering</option>
+                                    <option value="electronics">Electronics & Communication</option>
+                                    <option value="mechanical">Mechanical Engineering</option>
+                                    <option value="civil">Civil Engineering</option>
+                                    <option value="electrical">Electrical Engineering</option>
+                                    <option value="chemical">Chemical Engineering</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>📚 Academic Year</label>
+                                <select id="edit-dept-profile-year">
+                                    <option value="">Select Your Year</option>
+                                    <option value="1">1️⃣ First Year</option>
+                                    <option value="2">2️⃣ Second Year</option>
+                                    <option value="3">3️⃣ Third Year</option>
+                                    <option value="4">4️⃣ Fourth Year</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>🏛️ Hostel Block</label>
+                                <!-- <input type="text" id="dept-profile-hostel" readonly> -->
+                                <select id="edit-dept-profile-hostel">
+                                    <option value="" >Select Hostel Block</option>
+                                    <option value="nohostel" >Not In Hostel</option>
+                                    <option value="phule">Phule (Boys)</option>
+                                    <option value="jawahar">Jawahar (Boys)</option>
+                                    <option value="gandhi">Gandhi (Boys)</option>
+                                    <option value="shivaji">Chh. Shivaji (Boys)</option>
+                                    <option value="tilak">Lok. Tilak (Boys)</option>
+                                    <option value="vishveshwarya">Shri. Vishveshwarya (Boys)</option>
+                                    <option value="raman">C. V.Raman (Boys)</option>
+                                    <option value="bhabha">Homi Bhabha (Boys)</option>
+                                    <option value="bhaskar">Bhaskar (Boys)</option>
+                                    <option value="savitri">Savitri (Girls)</option>
+                                    <option value="saraswati">Saraswati (Girls)</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>🚪 Room Number</label>
+                                <input type="text" id="edit-dept-profile-room" placeholder="e.g  --> 17" >
+                            </div>
+                            <button type="button" class="btn" onclick="updateStudent()">
+                                ✔️ Edit Profile
+                            </button>
+                            <button type="button" class="btn btn-cancel" onclick="document.getElementById('edit-student-detail').style.display='none';">
+                                ❌ cancel
+                            </button>
+                        </form>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+
+    </div>
+    <!-- <script type="module" src="department.js"></script> -->
+
+
+    <script type="module" >
+        
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js';
+        import { getAuth } from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js';
+        import { getFirestore, collection, doc, setDoc, getDocs, getDoc, updateDoc , query, where } from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js';
+
+        // Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyB3jC4rKypCYUc0NhlJa-1kuAkmFGxGS88",
+            authDomain: "e-resolve-tkiet.firebaseapp.com",
+            projectId: "e-resolve-tkiet",
+            storageBucket: "e-resolve-tkiet.firebasestorage.app",
+            messagingSenderId: "876305569079",
+            appId: "1:876305569079:web:14b890b4704b52e7cfb6b2",
+            measurementId: "G-7SEN34J28J"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        window.onload = function() {
+            checkLogin();
+            loadStudents();
+            loadComplaints();
+        };
+
+        let students = [];
+        let complaints =[];
+        let currentUser = null;
+
+        function checkLogin() {
+            const userData = localStorage.getItem('currentUser');
+            if (!userData) {
+                window.location.href = 'login2.html';
+                return;
+            }
+            
+            currentUser = JSON.parse(userData);
+            if (currentUser.type !== 'department') {
+                alert('Access denied. This is a department portal.');
+                window.location.href = 'login2.html';
+                return;
+            }
+
+            document.getElementById('dept-welcome-text').textContent = `Welcome, ${currentUser.name}!`;
+            document.getElementById('dept-user-id').textContent = currentUser.id;
+            document.getElementById('dept-user-avatar').textContent = currentUser.name.charAt(0).toUpperCase();
+        }
+
+        async function loadStudents() {
+            students = [];
+            const querySnapshot = await getDocs(collection(db, "students"));
+
+            querySnapshot.forEach(doc => {
+                students.push(doc.data());
+            });
+
+            renderStudentTable(students);
+        }
+
+        function logout() {
+            if (confirm('Are you sure you want to LOGOUT ?\n\n')) {
+                localStorage.removeItem('currentUser');
+                alert('Logged out successfully!\n\n');
+                window.location.href = 'login2.html';
+            }
+        }
+
+        function showSection(sectionId) {
+
+            document.querySelectorAll('.dashboard-section').forEach(section => {
+                section.classList.remove('active');
+            });
+            
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            document.getElementById(sectionId).classList.add('active');
+            
+            // event.target.classList.add('active');
+            document.querySelector(`[onclick="showSection('${sectionId}')"]`).classList.add('active');
+
+
+            switch(sectionId) {
+                case 'dept-new-complaints':
+                    newComplaints();
+                    break;
+                case 'dept-in-progress-complaints':
+                    progressComplaints();
+                    break;
+                case 'dept-resolved-complaints':
+                    resolvedComplaints();
+                    break;
+                case 'dept-manage-student':
+                    
+                    break;
+            }
+            
+        }
+
+        async function loadComplaints() {
+
+            complaints = []; // reset array
+
+            // const querySnapshot = await getDocs(collection(db, "complaints"));
+            const q = query(
+                collection(db, "complaints"),
+                where("category", "==", "department")
+            );
+
+            const querySnapshot = await getDocs(q);
+
+            querySnapshot.forEach((doc) => {
+                complaints.push(doc.data());
+            });
+
+            newComplaints();
+            progressComplaints();
+            resolvedComplaints();
+        }
+
+        function newComplaints() {
+            const container1 = document.getElementById('dept-new-complaints-list');
+            const newComplaints = complaints.filter(c => c.status === 'pending');
+            
+            container1.innerHTML = '<div style="margin:100px 0 0 0 ; text-align:center; font-weight:bolder; font-size:20px;">Loading complaints...</div>';
+            
+            if (newComplaints.length === 0) {
+                container1.innerHTML = `
+                    <div style="margin:50px 0 0 0 ; text-align:center;">
+                        <h2>No complaints found</h2><br>
+                        <p  style="margin:-20px 0 0 0 ;">There is no <strong> New Complaint</strong> </p>
+                    </div>
+                `;
+                return;
+            }
+
+            newComplaints.sort((a, b) => {
+                const idA = parseInt(a.id.replace("COMP", ""));
+                const idB = parseInt(b.id.replace("COMP", ""));
+                return idB - idA;
+            });
+
+            setTimeout(() => {
+                container1.innerHTML = '';
+                newComplaints.sort((a, b) => new Date(b.date) - new Date(a.date))
+                    .forEach(complaint => {
+                        container1.appendChild(createComplaintCard(complaint, true));
+                });
+            }, 500);
+
+            
+        }
+
+        function progressComplaints() {
+            const container2 = document.getElementById('dept-in-progress-complaints-list');
+            const progressComplaints = complaints.filter(c => c.status === 'progress');
+            
+            container2.innerHTML = '<div style="margin:100px 0 0 0 ; text-align:center; font-weight:bolder; font-size:20px;">Loading complaints...</div>';
+            
+            if (progressComplaints.length === 0) {
+                container2.innerHTML = `
+                    <div style="margin:50px 0 0 0 ; text-align:center;">
+                        <h2>No complaints found</h2><br>
+                        <p  style="margin:-20px 0 0 0 ;">There is no <strong>In-Progress Complaint</strong> </p>
+                    </div>
+                `;
+                return;
+            }
+
+            progressComplaints.sort((a, b) => {
+                const idA = parseInt(a.id.replace("COMP", ""));
+                const idB = parseInt(b.id.replace("COMP", ""));
+                return idB - idA;
+            });
+
+            setTimeout(() => {
+                container2.innerHTML = '';
+                progressComplaints.sort((a, b) => new Date(b.date) - new Date(a.date))
+                    .forEach(complaint => {
+                        container2.appendChild(createComplaintCard(complaint, true));
+                });
+            }, 500);
+        }
+
+        function resolvedComplaints() {
+            const container3 = document.getElementById('dept-resolved-complaints-list');
+            const resolvedComplaints = complaints.filter(c => c.status === 'resolved');
+            
+            container3.innerHTML = '<div style="margin:100px 0 0 0 ; text-align:center; font-weight:bolder; font-size:20px;">Loading complaints...</div>';
+            
+            if (resolvedComplaints.length === 0) {
+                container3.innerHTML = `
+                    <div style="margin:50px 0 0 0 ; text-align:center;">
+                        <h2>No complaints found</h2><br>
+                        <p  style="margin:-20px 0 0 0 ;">There is no <strong>Resolved Complaint</strong> </p>
+                    </div>
+                `;
+                return;
+            }
+
+            resolvedComplaints.sort((a, b) => {
+                const idA = parseInt(a.id.replace("COMP", ""));
+                const idB = parseInt(b.id.replace("COMP", ""));
+                return idB - idA;
+            });
+
+            setTimeout(() => {
+                container3.innerHTML = '';
+                resolvedComplaints.sort((a, b) => new Date(b.date) - new Date(a.date))
+                    .forEach(complaint => {
+                        container3.appendChild(createComplaintCard(complaint, true));
+                });
+            }, 500);
+        }
+
+        function createComplaintCard(complaint) {
+            const card = document.createElement('div');
+            card.className = `complaint-card ${complaint.priority === 'high' ? 'high-priority' : ''} ${complaint.priority === 'low' ? 'resolved' : ''}`;
+            
+
+            const subcategoryLabels = {
+                'water': 'Water & Plumbing', 'electrical': 'Electrical Issues', 'mess': 'Mess & Food',
+                'cleaning': 'Cleanliness', 'security': 'Security', 'maintenance': 'Room Maintenance',
+                'lab': 'Lab Equipment', 'library': 'Library Services',
+                'classroom': 'Classroom Issues', 'exam': 'Examination', 'faculty': 'Faculty Related',
+                'academic': 'Academic Issues', 'administration': 'Administration','broken':'Broken Items' , 'stolen':'Stolen Items','other':'Other Issues'
+            };
+            
+            
+            card.innerHTML = `
+                <div class="complaint-header"  style="display: flex;">
+                    <div class="complaint-id ${complaint.priority === 'high' ? 'complaint-header-high' : ''} ${complaint.priority === 'low' ? 'complaint-header-low' : ''}" >
+                        ${subcategoryLabels[complaint.subcategory] || complaint.subcategory}  <br>
+                        <span style="font-size: 15px;">${complaint.id}</span>
+                    </div>
+
+
+
+                    <!-- <div  style="position:absolute ; right: 310px;">
+                         <span>${complaint.proof && complaint.proof.length > 0 ? `<span><img src="download3.png" ><span  style="font-weight:bolder;"> PDF</span></span>` : ''}</span> 
+                        
+                        <span>
+                            ${complaint.proof ? `
+                                    <a href="${complaint.proof}" download="complaint-${complaint.id}.pdf" style="text-decoration:none; color:black;">
+                                        <span>
+                                            <img src="download3.png" style="width:20px; vertical-align:middle;">
+                                            <span style="font-weight:bolder; cursor:pointer;"> PDF</span>
+                                        </span>
+                                    </a>
+                            `:``}  
+                        </span>
+                    </div> -->
+                    <!-- <div  style="position:absolute ; right: 30px;">
+                        <span class="status-badge status-${complaint.status}">
+                            ${complaint.status === 'pending' ? '⏳' : complaint.status === 'progress' ? '🔄' : '✅'} 
+                            ${complaint.status.toUpperCase()}
+                        </span>
+                        <span class="priority-badge priority-${complaint.priority}">
+                            ${complaint.priority === 'high' ? '🔴' : complaint.priority === 'medium' ? '🔵' : '🟢'} 
+                            ${complaint.priority.toUpperCase()}
+                        </span>
+                    </div> -->
+
+
+
+
+                    <div style="position:absolute ; right: 30px;">
+                        <span style="margin:0 10px 0 0;">
+                            ${complaint.proof ? `
+                                    <a href="${complaint.proof}" download="complaint-${complaint.id}.pdf" style="text-decoration:none; color:black;">
+                                        <span>
+                                            <img src="download3.png" style="width:20px; vertical-align:middle;">
+                                            <span style="font-weight:bolder; cursor:pointer;"> PDF</span>
+                                        </span>
+                                    </a>
+                            `:``}  
+                        </span>
+                        
+                        <span class="status-badge status-${complaint.status}" id="status-badge-hide-${complaint.id}" onclick="openStatusMenu('${complaint.id}')">
+                            ${complaint.status === 'pending' ? '⏳' : complaint.status === 'progress' ? '🔄' : '✅'} 
+                            ${complaint.status.toUpperCase()}
+                        </span>
+
+                        <select class="status-badge status-${complaint.status}" id="status-select-${complaint.id}" style="display:none; margin-left:10px;"   onchange="updateStatus('${complaint.id}')">
+                            <option value="pending" ${complaint.status === 'pending' ? 'selected' : ''}>⏳ Pending</option>
+                            <option value="progress" ${complaint.status === 'progress' ? 'selected' : ''}>🔄 In Progress</option>
+                            <option value="resolved" ${complaint.status === 'resolved' ? 'selected' : ''}>✅ Resolved</option>
+                        </select>
+
+                        <span class="priority-badge priority-${complaint.priority}" id="priority-badge-hide-${complaint.id}" onclick="openPriorityMenu('${complaint.id}')">
+                            ${complaint.priority === 'high' ? '🔴' : complaint.priority === 'medium' ? '🔵' : '🟢'} 
+                            ${complaint.priority.toUpperCase()}
+                        </span>
+
+                        <select class="priority-badge priority-${complaint.priority}" id="priority-select-${complaint.id}" style="display:none; margin-left:10px;"   onchange="updatePriority('${complaint.id}')">
+                            <option value="low" ${complaint.priority === 'low' ? 'selected' : ''}>🟢 Low</option>
+                            <option value="medium" ${complaint.priority === 'medium' ? 'selected' : ''}>🔵 Medium</option>
+                            <option value="high" ${complaint.priority === 'high' ? 'selected' : ''}>🔴 High</option>
+                        </select>
+
+                        <!-- Restrict student -->
+                        <button class="btn priority-${complaint.priority}"" style="margin-left:10px; padding:7px;" onclick="openRestrictMenu('${complaint.id}', '${complaint.studentId}')">
+                            ❌ Restrict Student
+                        </button>
+                    </div>
+
+                </div>
+                ${complaint.status === 'pending' &&  complaint.studentId === currentUser.id? `
+                    <div style=" position: absolute; right: 20px; top: 80px;">
+                        <button class="btn btn-success"  onclick="editComplaint('${complaint.id}')" > Edit Complaint </button>
+                    </div>
+                ` : ''}
+                
+                <div class="complaint-content">
+                    <h2>${complaint.subject}</h2>
+                    <p>${complaint.description}</p>
+                    ${complaint.location ? `<p><strong>Location:</strong> ${complaint.location}</p>` : ''}
+                </div>
+
+                ${complaint.response ? `
+                    <div class="response-section complaint-card  ${complaint.priority === 'high' ? 'high-priority' : ''} ${complaint.priority === 'low' ? 'resolved' : ''}">
+                        <strong style="font-weight:25px;">Complaint Response:</strong><br>
+                        <p class="student-feedback" style="margin:0 0 0 50px;">${complaint.response}</p>
+                         ${complaint.responseDate ? `<br><small><strong>Response Date:</strong> ${complaint.responseDate}</small>` : ''}<br>
+                        <button class="btn btn-cancel"  onclick="deleteResponse('${complaint.id}')">Delete Feedback</button>
+                    </div>
+                ` : `${complaint.status === 'resolved' && !complaint.response ? `
+                    <button class="btn btn-success"  onclick="document.getElementById('response-form-${complaint.id}').style.display = 'block';">
+                        Give response
+                    </button>
+
+                    <p class="student-feedback">${complaint.response || ''}</p>
+                    <div class="feedback-form" id="response-form-${complaint.id}" style="display: none;">
+                        <h5>Please provide your response</h5>
+                        <textarea 
+                            id="response-${complaint.id}" 
+                            placeholder=" please provide your response" 
+                            rows="3" 
+                            style="width: 100%; padding: 12px; border: 2px solid ; border-radius: 8px; resize: vertical; margin-bottom: 10px; font-size:18px;"
+                        ></textarea>
+                        <button class="btn btn-success" onclick="submitResponse('${complaint.id}')">
+                            ✔️ Submit response
+                        </button>
+                    </div>
+                ` : ''} 
+
+                `}
+
+                ${complaint.feedback ? `
+                    <div class="feedback-section complaint-card  ${complaint.priority === 'high' ? 'high-priority' : ''} ${complaint.priority === 'low' ? 'resolved' : ''}">
+                        <strong>Student Feedback:</strong><br>
+                        <p class="student-feedback">${complaint.feedback}</p> 
+                    </div>
+                ` : ` `}
+
+                <div class="complaint-meta">
+                    <span><strong>Category:</strong> ${complaint.category.toUpperCase()}</span>
+                    <span><strong>Submitted:</strong> ${complaint.date}</span>
+                    <span><strong>Student:</strong> ${complaint.hide === 'no' ? `${complaint.studentName.toUpperCase()} (${complaint.studentId})` : 'Anonymous'}</span>
+                </div>
+                
+            `;
+            
+            return card;
+        }
+
+        async function deleteResponse(complaintId) {
+            if (!confirm('Do you want to delete your response?')) return;
+
+            const complaint = complaints.find(c => c.id === complaintId);
+            if (!complaint) {
+                alert('Complaint not found!');
+                return;
+            }
+
+            const complaintRef = doc(db, "complaints", complaintId);
+            await updateDoc(complaintRef, {
+                response: '',
+                responseDate: ''
+            });
+            // complaint.feedback = '';
+
+            loadComplaints();
+
+        }
+
+        async function submitResponse(complaintId) {
+            const response = document.getElementById(`response-${complaintId}`).value.trim();
+            if (!response) {
+                alert('Please enter your response .');
+                return;
+            }
+            
+            if (response.length < 10) {
+                alert('Please provide more detailed response (at least 10 characters).');
+                return;
+            }
+            
+            const complaint = complaints.find(c => c.id === complaintId);
+            if (complaint) {
+                complaint.response = response;
+                complaint.responseDate = new Date().toISOString().split('T')[0];
+                
+
+                const complaintRef = doc(db, "complaints", complaintId);
+                await updateDoc(complaintRef, {
+                    response: complaint.response,
+                    responseDate: complaint.responseDate
+                });
+                loadComplaints();
+                const responseElement = document.getElementById(`response-${complaintId}`);
+                if (responseElement) {
+                    responseElement.style.background = '#d4edda';
+                    responseElement.style.border = '2px solid #28a745';
+                    responseElement.value = 'Response submitted successfully!';
+                    // responseElement.disabled = true;
+                }
+            }
+        }
+
+        function openStatusMenu(id) {
+            document.getElementById(`status-select-${id}`).style.display = "inline-block";
+            document.getElementById(`status-badge-hide-${id}`).style.display = "none";
+        }
+
+        function openPriorityMenu(id) {
+            document.getElementById(`priority-select-${id}`).style.display = "inline-block";
+            document.getElementById(`priority-badge-hide-${id}`).style.display = "none";
+        }
+
+        async function updateStatus(id) {
+            const newStatus = document.getElementById(`status-select-${id}`).value;
+            const complaintRef = doc(db, "complaints", id);
+
+            await updateDoc(complaintRef, { status: newStatus });
+
+            alert("Status updated!");
+            loadComplaints();
+        }
+
+        async function updatePriority(id) {
+            const newPriority = document.getElementById(`priority-select-${id}`).value;
+            const complaintRef = doc(db, "complaints", id);
+
+            await updateDoc(complaintRef, { priority: newPriority });
+
+            alert("Priority updated!");
+            loadComplaints();
+        }
+
+        function openRestrictMenu(complaintId, studentId) {
+            let days = prompt("Restrict this student for how many days? (1–100)");
+
+            if (days === null) return; // cancelled
+
+            days = days.trim();
+
+            // Check: number only
+            if (!/^\d+$/.test(days)) {
+                alert("Please enter a valid number.");
+                return;
+            }
+
+            days = parseInt(days);
+
+            // Check: range 1–100
+            if (days < 1 || days > 100) {
+                alert("Days must be between 1 and 100.");
+                return;
+            }
+
+            restrictStudent(studentId, days, complaintId);
+        }
+
+        async function restrictStudent(studentId, days, complaintId) {
+            const endDate = new Date();
+            endDate.setDate(endDate.getDate() + days);
+
+            const studentRef = doc(db, "students", studentId);
+
+            await updateDoc(studentRef, {
+                restrictedUntil: endDate.toISOString()
+            });
+
+            alert(`Student restricted for ${days} days.`);
+            loadComplaints();
+        }
+
+        
+
+
+        function addStudentForm(){
+            document.getElementById('dept-add-student-form').style.display='block';
+            document.getElementById('dept-add-student-button').style.display='none';
+            // document.getElementById('dept-add-student-form').reset();
+            document.getElementById('dept-profile-form').reset();
+        }
+
+        function cancelStudentForm(){
+            document.getElementById('dept-add-student-form').style.display='none';
+            document.getElementById('dept-add-student-button').style.display='block';
+        }
+
+        async function saveStudent() {
+
+            
+
+            // const studentId = document.getElementById("dept-student-profile-id").value;
+            const name = document.getElementById("dept-profile-name").value;
+            const email = document.getElementById("dept-profile-email").value;
+            const phone = document.getElementById("dept-profile-phone").value;
+            const department = document.getElementById("dept-profile-department").value;
+            const year = document.getElementById("dept-profile-year").value;
+            const hostel = document.getElementById("dept-profile-hostel").value;
+            const room = document.getElementById("dept-profile-room").value;
+            const grNumber = document.getElementById("dept-student-profile-gr-no").value;
+
+            if (!name || !email || !phone || !department || !year || !hostel || !room || !grNumber) {
+                alert("Please fill all required fields!");
+                return;
+            }
+            if (!validateEmail(email)) {
+                alert('Please enter a valid email address');
+                return;
+            }
+            if (!/^[A-Za-z\s]+$/.test(name)) {
+                alert("Name should contain only alphabets.");
+                return;
+            }
+            if (!/^[0-9]{10}$/.test(phone)) {
+                alert("Phone number should be 10 digits and contain only numbers.");
+                return;
+            }
+            if (!/^[0-9]{2}[A-Z]{4}[0-9]{5}$/.test(grNumber)) {
+                alert("Gr Number should be 2 Number + 4 Capital Letter + 5 Number.");
+                return;
+            }
+            if (!/^([0-9]+(-S)?)|(-)$/.test(room)) {
+                alert("Room should contain only numbers or number followed bt -S (for special room in capital S) ");
+                return;
+            }
+            // if (phone.length < 10 && phone.length > 10) {
+            //     alert('Please provide proper phone number (10 characters only).');
+            //     return;
+            // }
+
+            // const studentData = {
+            //     studentId: 'STUD' + String(students.length + 1).padStart(3, '0'),
+            //     name,
+            //     email,
+            //     phone,
+            //     department,
+            //     year,
+            //     hostel,
+            //     room,
+            //     type: "student"
+            // };
+            // students.push(studentData);
+            // try {
+                // 🔥 Save student full profile
+                // await db.collection("students").doc(studentId).set(studentData);
+
+                // // 🔥 Save login credentials
+                // await db.collection("users").doc(email).set({
+                //     userId: studentId,
+                //     email,
+                //     password: "123456", // or auto-generate
+                //     type: "student"
+                // });
+
+                // alert("Student added successfully!");
+
+                // addToStudentTable(studentData);
+
+            // } catch (err) {
+                // console.error(err);
+            //     alert("Error saving student!");
+            // }
+
+            // const studentId = "STUD" + String(students.length + 1).padStart(3, "0");
+            const snapshot = await getDocs(collection(db, "students"));
+            const count = snapshot.size + 1;
+
+            const studentId = "STUD" + String(count).padStart(3, "0");
+            const studentData = {
+                studentId,  
+                name,
+                email,
+                phone,
+                department,
+                year,
+                hostel,
+                room,
+                grNumber,
+                type: "student"
+            };
+
+            // students.push(studentData);
+
+            // alert("Student added successfully!");
+            // addToStudentTable(studentData);
+
+            // cancelStudentForm();
+            console.log("Saving student:", studentId, studentData);
+
+            await setDoc(doc(db, "students", studentId), studentData);
+            console.log("Saved successfully!");
+
+
+            alert("Student Added Successfully!");
+
+            loadStudents(); 
+            cancelStudentForm();
+        }
+
+        function validateEmail(email) {
+            return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+        }
+
+
+        function addToStudentTable(student) {
+            renderStudentTable(students);
+        }
+
+
+        function renderStudentTable(list) {
+
+
+            const categoryLabels = {
+                'computer-science': 'Computer Science Engineering', 
+                'electronics': 'Electronics & Communication', 
+                'mechanical': 'Mechanical Engineering',
+                'civil': 'Civil Engineering', 
+                'electrical': 'Electrical Engineering', 
+                'chemical': 'Chemical Engineering',
+                '1': '1️⃣ First Year', 
+                '2': '2️⃣ Second Year',
+                '3': '3️⃣ Third Year', 
+                '4': '4️⃣ Fourth Year', 
+                'phule': 'Phule (Boys)',
+                'nohostel': '-',
+                'jawahar': 'Jawahar (Boys)', 
+                'gandhi': 'Gandhi (Boys)',
+                'shivaji':'Chh. Shivaji (Boys)' , 
+                'tilak':'Lok. Tilak (Boys)',
+                'vishveshwarya': 'Shri. Vishveshwarya (Boys)',
+                'raman': 'C. V.Raman (Boys)', 
+                'bhabha': 'Homi Bhabha (Boys)',
+                'bhaskar':'Bhaskar (Boys)' , 
+                'savitri':'Savitri (Girls)',
+                'saraswati':'Saraswati (Girls)'
+            };
+
+            const tableBody = document.getElementById("dept-add-student-table-body");
+            tableBody.innerHTML = ""; // Clear table
+
+            if (list.length === 0) {
+                tableBody.innerHTML = `
+                    <tr>
+                        <td colspan="9" style="text-align:center; padding:20px; font-size:18px;">
+                            No students details found
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+
+            list.forEach(student => {
+                const row = document.createElement("tr");
+                row.innerHTML = `
+                    <td>${student.studentId}</td>
+                    <td>${student.grNumber}</td>
+                    <td>${student.name}</td>
+                    <td>${student.email}</td>
+                    <td>${student.phone}</td>
+                    <td>${categoryLabels[student.department]}</td>
+                    <td>${categoryLabels[student.year]}</td>
+                    <td>${categoryLabels[student.hostel]}</td>
+                    <td>${student.room}</td>
+                    <td>
+                        <button class="btn update-btn" onclick="editStudentDetails('${student.studentId}')">
+                            Edit Details
+                        </button>
+                    </td>
+                `;
+                tableBody.appendChild(row);
+            });
+        }
+
+        function searchStudent() {
+            const value = document.getElementById("dept-student-filter-category-search-input").value.toLowerCase();
+
+            const filtered = students.filter(s =>
+                s.name.toLowerCase().includes(value) ||
+                s.email.toLowerCase().includes(value) ||
+                s.grNumber.toLowerCase().includes(value) ||
+                s.phone.includes(value) ||
+                s.studentId.toLowerCase().includes(value)
+            );
+
+            renderStudentTable(filtered);
+        }
+
+        function filterStudent() {
+            const dept = document.getElementById("dept-student-filter-category-department").value;
+            const year = document.getElementById("dept-student-filter-category-year").value;
+            const hostel = document.getElementById("dept-student-filter-category-hostel").value;
+
+            const filtered = students.filter(s =>
+                (dept === "" || s.department === dept) &&
+                (year === "" || s.year === year) &&
+                (hostel === "" || s.hostel === hostel)
+            );
+
+            renderStudentTable(filtered);
+        }
+
+        function filterComplaints1() {
+            const priority1 = document.getElementById('dept-new-complaints-filter-priority').value;
+            
+            // let filteredComplaints1 = [...complaints];
+            
+            // if (priority1) {
+            //     filteredComplaints1 = filteredComplaints1.filter(c => c.status === "pending" && c.priority === priority1);
+            // }
+            
+            let filteredComplaints1 = complaints.filter(c => c.status === "pending");
+
+            if (priority1) {
+                filteredComplaints1 = filteredComplaints1.filter(c => c.priority === priority1);
+            }
+
+            const container1 = document.getElementById('dept-new-complaints-list');
+            container1.innerHTML = '';
+            
+            if (filteredComplaints1.length === 0) {
+                container1.innerHTML = `
+                    <div  style="margin:50px 0 0 0 ; text-align:center;">
+                        <h3>No complaints found</h3>
+                        <p>No complaints match your <strong>"${priority1}"</strong> filter criteria.</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            filteredComplaints1.sort((a, b) => {
+                const idA = parseInt(a.id.replace("COMP", ""));
+                const idB = parseInt(b.id.replace("COMP", ""));
+                return idB - idA;
+            });
+
+            filteredComplaints1.forEach(complaint => {
+                container1.appendChild(createComplaintCard(complaint, false));
+            });
+
+            // loadComplaints();
+        }
+
+        function filterComplaints2() {
+            const priority2 = document.getElementById('dept-in-progress-filter-priority').value;
+            
+            // let filteredComplaints2 = [...complaints];
+
+            // if (priority2) {
+            //     filteredComplaints2 = filteredComplaints2.filter(c => c.status === "progress" && c.priority === priority2);
+            // }
+
+            let filteredComplaints2 = complaints.filter(c => c.status === "progress");
+
+            if (priority2) {
+                filteredComplaints2 = filteredComplaints2.filter(c => c.priority === priority2);
+            }
+            
+            const container2 = document.getElementById('dept-in-progress-complaints-list');
+            container2.innerHTML = '';
+            
+            if (filteredComplaints2.length === 0) {
+                container2.innerHTML = `
+                    <div  style="margin:50px 0 0 0 ; text-align:center;">
+                        <h3>No complaints found</h3>
+                        <p>No complaints match your <strong>"${priority2}"</strong> filter criteria.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            filteredComplaints2.sort((a, b) => {
+                const idA = parseInt(a.id.replace("COMP", ""));
+                const idB = parseInt(b.id.replace("COMP", ""));
+                return idB - idA;
+            });
+            
+            filteredComplaints2.forEach(complaint => {
+                container2.appendChild(createComplaintCard(complaint, false));
+            });
+
+            // loadComplaints();
+        }
+
+        function filterComplaints3() {
+            const priority3 = document.getElementById('dept-resolved-complaints-filter-priority').value;
+            
+            // let filteredComplaints3 = [...complaints];
+
+            // if (priority3) {
+            //     filteredComplaints3 = filteredComplaints3.filter(c => c.status === "resolved" && c.priority === priority3);
+            // }
+
+            let filteredComplaints3 = complaints.filter(c => c.status === "resolved");
+
+            if (priority3) {
+                filteredComplaints3 = filteredComplaints3.filter(c => c.priority === priority3);
+            }
+            
+            const container3 = document.getElementById('dept-resolved-complaints-list');
+            container3.innerHTML = '';
+            
+            if (filteredComplaints3.length === 0) {
+                container3.innerHTML = `
+                    <div  style="margin:50px 0 0 0 ; text-align:center;">
+                        <h3>No complaints found</h3>
+                        <p>No complaints match your <strong>"${priority3}"</strong> filter criteria.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            filteredComplaints3.sort((a, b) => {
+                const idA = parseInt(a.id.replace("COMP", ""));
+                const idB = parseInt(b.id.replace("COMP", ""));
+                return idB - idA;
+            });
+            
+            filteredComplaints3.forEach(complaint => {
+                container3.appendChild(createComplaintCard(complaint, false));
+            });
+
+            // loadComplaints();
+        }
+
+        const subcategoryLabels = {
+            'water': 'Water & Plumbing', 'electrical': 'Electrical Issues', 'mess': 'Mess & Food',
+            'cleaning': 'Cleanliness', 'security': 'Security', 'maintenance': 'Room Maintenance',
+            'lab': 'Lab Equipment', 'library': 'Library Services',
+            'classroom': 'Classroom Issues', 'exam': 'Examination', 'faculty': 'Faculty Related',
+            'academic': 'Academic Issues', 'administration': 'Administration','broken':'Broken Items' , 'stolen':'Stolen Items','other':'Other Issues'
+        };
+
+        function searchComplaints1() {
+            const searchTerm1 = document.getElementById('dept-new-complaints-search-input').value.toLowerCase();
+            
+            if (!searchTerm1) {
+                newComplaints();
+                return;
+            }
+            
+            let filteredComplaint1 = complaints.filter(c => c.status === "pending");
+
+            const searchResults1 = filteredComplaint1.filter(complaint => 
+                complaint.id.toLowerCase().includes(searchTerm1) ||
+                complaint.subject.toLowerCase().includes(searchTerm1) ||
+                complaint.location.toLowerCase().includes(searchTerm1) ||
+                complaint.studentId.toLowerCase().includes(searchTerm1) ||
+                complaint.studentName.toLowerCase().includes(searchTerm1) ||
+                subcategoryLabels[complaint.subcategory].toLowerCase().includes(searchTerm1)
+            );
+
+
+            
+            const containers1 = document.getElementById('dept-new-complaints-list');
+            containers1.innerHTML = '';
+            
+            if (searchResults1.length === 0) {
+                containers1.innerHTML = `
+                    <div  style="margin:50px 0 0 0 ; text-align:center;">
+                        <h3>No search results</h3>
+                        <p>No complaints found matching <strong>"${searchTerm1}"</strong>.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            searchResults1.sort((a, b) => {
+                const idA = parseInt(a.id.replace("COMP", ""));
+                const idB = parseInt(b.id.replace("COMP", ""));
+                return idB - idA;
+            });
+            
+            searchResults1.forEach(complaint => {
+                containers1.appendChild(createComplaintCard(complaint, false));
+            });
+        }
+
+        function searchComplaints2() {
+            const searchTerm2 = document.getElementById('dept-in-progress-search-input').value.toLowerCase();
+            
+            if (!searchTerm2) {
+                progressComplaints();
+                return;
+            }
+            
+            let filteredComplaint2 = complaints.filter(c => c.status === "progress");
+
+            const searchResults2 = filteredComplaint2.filter(complaint => 
+                complaint.id.toLowerCase().includes(searchTerm2) ||
+                complaint.subject.toLowerCase().includes(searchTerm2) ||
+                complaint.location.toLowerCase().includes(searchTerm2) ||
+                complaint.studentId.toLowerCase().includes(searchTerm2) ||
+                complaint.studentName.toLowerCase().includes(searchTerm2) ||
+                subcategoryLabels[complaint.subcategory].toLowerCase().includes(searchTerm2)
+            );
+
+
+            
+            const containers2 = document.getElementById('dept-in-progress-complaints-list');
+            containers2.innerHTML = '';
+            
+            if (searchResults2.length === 0) {
+                containers2.innerHTML = `
+                    <div  style="margin:50px 0 0 0 ; text-align:center;">
+                        <h3>No search results</h3>
+                        <p>No complaints found matching <strong>"${searchTerm2}"</strong>.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            searchResults2.sort((a, b) => {
+                const idA = parseInt(a.id.replace("COMP", ""));
+                const idB = parseInt(b.id.replace("COMP", ""));
+                return idB - idA;
+            });
+            
+            searchResults2.forEach(complaint => {
+                containers2.appendChild(createComplaintCard(complaint, false));
+            });
+        }
+
+        function searchComplaints3() {
+            const searchTerm3 = document.getElementById('dept-resolved-complaints-search-input').value.toLowerCase();
+            
+            if (!searchTerm3) {
+                resolvedComplaints();
+                return;
+            }
+            
+            let filteredComplaint3 = complaints.filter(c => c.status === "resolved");
+
+            const searchResults3 = filteredComplaint3.filter(complaint => 
+                complaint.id.toLowerCase().includes(searchTerm3) ||
+                complaint.subject.toLowerCase().includes(searchTerm3) ||
+                complaint.location.toLowerCase().includes(searchTerm3) ||
+                complaint.studentId.toLowerCase().includes(searchTerm3) ||
+                complaint.studentName.toLowerCase().includes(searchTerm3) ||
+                subcategoryLabels[complaint.subcategory].toLowerCase().includes(searchTerm3)
+            );
+
+
+            
+            const containers3 = document.getElementById('dept-resolved-complaints-list');
+            containers3.innerHTML = '';
+            
+            if (searchResults3.length === 0) {
+                containers3.innerHTML = `
+                    <div  style="margin:50px 0 0 0 ; text-align:center;">
+                        <h3>No search results</h3>
+                        <p>No complaints found matching <strong>"${searchTerm3}"</strong>.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            searchResults3.sort((a, b) => {
+                const idA = parseInt(a.id.replace("COMP", ""));
+                const idB = parseInt(b.id.replace("COMP", ""));
+                return idB - idA;
+            });
+            
+            searchResults3.forEach(complaint => {
+                containers3.appendChild(createComplaintCard(complaint, false));
+            });
+        }
+        
+      
+        let selectedStudentId = null;
+
+        function editStudentDetails(studentId) {
+            selectedStudentId = studentId; 
+            const student = students.find(s => s.studentId === studentId);
+
+            if (!student) return;
+            document.getElementById("edit-student-detail").style.display = 'block';
+            // Fill the modal fields
+            // document.getElementById("edit-id").value = student.studentId;
+            document.getElementById("edit-dept-student-profile-gr-no").value = student.grNumber;
+            document.getElementById("edit-dept-profile-name").value = student.name;
+            document.getElementById("edit-dept-profile-email").value = student.email;
+            document.getElementById("edit-dept-profile-phone").value = student.phone;
+            document.getElementById("edit-dept-profile-department").value = student.department;
+            document.getElementById("edit-dept-profile-year").value = student.year;
+            document.getElementById("edit-dept-profile-hostel").value = student.hostel;
+            document.getElementById("edit-dept-profile-room").value = student.room;
+
+            // document.getElementById("edit-modal").classList.add("active");
+        }
+
+        async function updateStudent() {
+            // const id = document.getElementById("edit-id").value;
+
+            // const student = students.find(s => s.studentId === selectedStudentId);
+            // if (!student) {
+            //     alert("Student not found!");
+            //     return;
+            // }
+            // student.name = document.getElementById("edit-dept-profile-name").value;
+            // student.email = document.getElementById("edit-dept-profile-email").value;
+            // student.phone = document.getElementById("edit-dept-profile-phone").value;
+            // student.department = document.getElementById("edit-dept-profile-department").value;
+            // student.year = document.getElementById("edit-dept-profile-year").value;
+            // student.hostel = document.getElementById("edit-dept-profile-hostel").value;
+            // student.room = document.getElementById("edit-dept-profile-room").value;
+
+            // // document.getElementById("edit-modal").classList.remove("active");
+
+            // renderStudentTable(students);
+            // document.getElementById("edit-student-detail").style.display = 'none';
+            // alert("Student updated successfully!");
+
+            if (!selectedStudentId) {
+                alert("Invalid Student!");
+                return;
+            }
+
+            const studentRef = doc(db, "students", selectedStudentId);
+
+            await updateDoc(studentRef, {
+                name: document.getElementById("edit-dept-profile-name").value,
+                email: document.getElementById("edit-dept-profile-email").value,
+                phone: document.getElementById("edit-dept-profile-phone").value,
+                department: document.getElementById("edit-dept-profile-department").value,
+                year: document.getElementById("edit-dept-profile-year").value,
+                hostel: document.getElementById("edit-dept-profile-hostel").value,
+                room: document.getElementById("edit-dept-profile-room").value,
+                grNumber: document.getElementById("edit-dept-student-profile-gr-no").value
+            });
+
+            alert("Student Updated Successfully!");
+            document.getElementById("edit-student-detail").style.display = "none";
+
+            loadStudents();
+
+
+        }
+
+
+
+        window.showSection = showSection;
+        window.logout = logout;
+        window.addStudentForm = addStudentForm;
+        window.cancelStudentForm = cancelStudentForm;
+        window.editStudentDetails = editStudentDetails;
+        window.saveStudent = saveStudent;
+        window.updateStudent = updateStudent;
+        // window.editStudent = editStudent;
+        window.searchStudent = searchStudent;
+        window.filterStudent = filterStudent;
+        window.deleteResponse = deleteResponse;
+        window.submitResponse = submitResponse;
+        window.restrictStudent = restrictStudent;
+        window.openRestrictMenu = openRestrictMenu;
+        window.updateStatus = updateStatus;
+        window.updatePriority = updatePriority;
+        window.openPriorityMenu = openPriorityMenu;
+        window.openStatusMenu = openStatusMenu;
+        // window.filterNewComplaints = filterNewComplaints;
+        window.filterComplaints1 = filterComplaints1;
+        window.filterComplaints2 = filterComplaints2;
+        window.filterComplaints3 = filterComplaints3;
+        window.searchComplaints1 = searchComplaints1;
+        window.searchComplaints2 = searchComplaints2;
+        window.searchComplaints3 = searchComplaints3;
+
+            
+
+    </script> 
+</body>
+</html>
+
+

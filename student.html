@@ -1,0 +1,1762 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>e-RESOLVE - Student Dashboard</title>
+    <link rel="stylesheet" href="student.css">
+</head>
+<body>
+    <div>
+        <img id="tkiet_banner_id" src="tkiet_banner.jpg" alt="tkiet banner">
+    </div>
+    <img id="tkiet_building_id" src="tkiet_building.webp" alt="tkiet building">
+    <div class="dashboard">
+        <div class="user_info">
+                <div class="user_icon" id="user-avatar">K</div>
+                <div class="name-fitting">
+                    <div id="welcome-text"  style="font-weight: 600; flex: 1; min-width: 0; overflow: auto; white-space: nowrap;" class="name-fitting">Welcome, Student!</div>
+                    <div style="font-size: 20px; " id="user-id">STU001</div>
+                </div>
+            </div>
+        <div class="dashboard-nav">
+            <button class="nav-btn active" onclick="showSection('view-complaints')">
+                📋 All Complaints
+            </button>
+            <button class="nav-btn" onclick="showSection('my-complaints')">
+                📝 My Complaints
+            </button>
+            <button class="nav-btn" onclick="showSection('my-profile')">
+                👤 My Profile
+            </button>
+            <button class="nav-btn" onclick="showSection('ai-chatbot')">
+                🤖 Chatbot
+            </button>
+            <button class="nav-btn" onclick="logout()" style="position: absolute; bottom: 3%;">
+                🔚 Logout
+            </button>
+        </div>
+    </div>
+
+
+    <div class="right-content">
+        <div class="container">
+
+            <!-- View All Complaints -->
+            <div id="view-complaints" class="dashboard-section active all-complaints-dashboard" style="height: 75vh;">
+                <h2 class="section-title">All Complaints</h2>
+                
+                <div class="filters" >
+                    <select id="filter-category" onchange="filterComplaints()">
+                        <option value="">All Categories</option>
+                        <option value="hostel">Hostel</option>
+                        <option value="department">Department</option>
+                    </select>
+                    <select id="filter-status" onchange="filterComplaints()">
+                        <option value="">All Status</option>
+                        <option value="pending">Pending</option>
+                        <option value="progress">In Progress</option>
+                        <option value="resolved">Resolved</option>
+                    </select>
+                    <select id="filter-priority" onchange="filterComplaints()">
+                        <option value="">All Priorities</option>
+                        <option value="high">High</option>
+                        <option value="medium">Medium</option>
+                        <option value="low">Low</option>
+                    </select>
+                    <input type="text" id="search-input" placeholder="🔍 Search " style="width: 25vw;" onkeyup="searchComplaints()">
+                </div>
+                
+                <div id="all-complaints-list"></div>
+            </div>
+
+            <!-- My Complaints -->
+            <div id="my-complaints" class="dashboard-section">
+                <h2 class="section-title">My Complaints</h2>
+
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <h3 id="total-complaints">0</h3>
+                        <p>Total Complaints</p>
+                    </div>
+                    <div class="stat-card stat-pending">
+                        <h3 id="pending-complaints">0</h3>
+                        <p>Pending</p>
+                    </div>
+                    <div class="stat-card stat-progress">
+                        <h3 id="progress-complaints">0</h3>
+                        <p>In Progress</p>
+                    </div>
+                    <div class="stat-card stat-resolved">
+                        <h3 id="resolved-complaints">0</h3>
+                        <p>Resolved</p>
+                    </div>
+                </div>
+                
+                <div style="margin-bottom: 30px;">
+                    <button class="btn" onclick="showComplaintForm()">
+                        ➕ Register New Complaint
+                    </button>
+                </div>
+                
+                <div class="filters">
+                    <select id="my-filter-category" onchange="filterMyComplaints()">
+                        <option value="">All Categories</option>
+                        <option value="hostel">Hostel</option>
+                        <option value="department">Department</option>
+                    </select>
+                    <select id="my-filter-status" onchange="filterMyComplaints()">
+                        <option value="">All Status</option>
+                        <option value="pending">Pending</option>
+                        <option value="progress">In Progress</option>
+                        <option value="resolved">Resolved</option>
+                    </select>
+                </div>
+                
+                <div id="my-complaints-list"></div>
+
+                <!-- <div class="complaint-card">
+                    <div class="complaint-header" style="display: flex;">
+                        <div class="complaint-id complaint-header-medium">
+                               🕵️ FACULTY ISSUES  <br>
+                               <span style="font-size: 15px;">🏢 COM0011</span>s
+                        </div>
+                        <div style="position:absolute ; right: 30px;">
+                            <span class="status-badge status-pending">
+                                pending ⏳ 
+                                progress🔄
+                                resolved ✅
+                            </span>
+                            <span class="priority-badge priority-medium">
+                                high🔴
+                                medium🔵
+                                low🟢
+                            </span>
+                        </div>
+                    </div>
+                    <div class="complaint-content">
+                        <h2>faculty is not teaching well</h2>
+                        <p>these particular subject teacher is not teaching well</p>
+                        <p><strong>📍 Location:</strong> CRCS01</p>
+                        
+                    </div>
+                    <div class="complaint-meta">
+                        <span><strong>Category:</strong> hostel</span>
+                        <span><strong>Submitted:</strong> 2025-1-12</span>
+                        <span><strong>Student:</strong> STU001</span>
+                    </div>
+                </div> -->
+
+                <!-- <div class="complaint-card high-priority ">
+                    <div class="complaint-header" style="display: flex;">
+                        <div class="complaint-id complaint-header-high">
+                               🕵️ FACULTY ISSUES  <br>
+                               <span style="font-size: 15px;">🏢 COM0011</span>
+                        </div>
+                        <div style="position:absolute ; right: 30px;">
+                            <span class="status-badge status-progress">
+                                pending ⏳ 
+                                progress🔄
+                                resolved ✅
+                            </span>
+                            <span class="priority-badge priority-high">
+                                high🔴
+                                medium🔵
+                                low🟢
+                            </span>
+                        </div>
+                    </div>
+                    <div class="complaint-content">
+                        <h2>faculty is not teaching well</h2>
+                        <p>these particular subject teacher is not teaching well</p>
+                        <p><strong>📍 Location:</strong> CRCS01</p>
+                        
+                        
+                    </div>
+                    <div class="complaint-meta">
+                        <span><strong>Category:</strong> hostel</span>
+                        <span><strong>Submitted:</strong> 2025-1-12</span>
+                        <span><strong>Student:</strong> STU001</span>
+                    </div>
+                </div> -->
+
+                <!-- <div class="complaint-card resolved">
+                    <div class="complaint-header" style="display: flex;">
+                        <div class="complaint-id complaint-header-low">
+                               🕵️ FACULTY ISSUES  <br>
+                               <span style="font-size: 15px;">🏢 COM0011</span>
+                        </div>
+                        <div style="position:absolute ; right: 30px;">
+                            <span class="status-badge status-resolved">
+                                pending ⏳ 
+                                progress🔄
+                                resolved ✅
+                            </span>
+                            <span class="priority-badge priority-low">
+                                high🔴
+                                medium🟡
+                                low🟢
+                            </span>
+                        </div>
+                    </div>
+                    <div class="complaint-content">
+                        <h2>faculty is not teaching well</h2>
+                        <p>these particular subject teacher is not teaching well sgdsagasdkjfbkajdsbfkjNDSfa askdfhnkasld fasdhfashdfoas dfoasdfo aos dfas dfoahsdf asdfas dfioahsdf asdfj oasdf oashdf a sdfsj asdf asdjg oasodg ashg asfjg oasogjo</p>
+                        <p><strong>📍 Location:</strong> CRCS01</p>
+                        
+                            <div class="response-section complaint-card resolved">
+                                <strong>🔧 Department Response:</strong><br>
+                                <p>we will take action </p>
+                                <small><strong>Response Date:</strong> 2024-02-14</small>
+                            </div>
+                            <div class="feedback-section complaint-card resolved">
+                                <strong>📝 Your Feedback:</strong><br>
+                                <button class="btn btn-success"  style="position: absolute; right: 30px; top: 20px;">Give Feedback</button>
+                                <p class="student-feedback">feedback will come here</p>
+                                <div class="feedback-form" style="display: none;">
+                                    <h5>💭 Please provide your feedback</h5>
+                                    <textarea id="feedback-${complaint.id}" placeholder="How satisfied are you with the resolution of the complaint? Your feedback helps us improve our services..." rows="3" style="width: 100%; padding: 12px; border: 2px solid #dee2e6; border-radius: 8px; resize: vertical; margin-bottom: 10px;"></textarea>
+                                    <button class="btn btn-success" onclick="submitFeedback('${complaint.id}')">
+                                        📤 Submit Feedback
+                                    </button>
+                                </div>
+                            </div>
+                           
+                        
+                    </div>
+                    <div class="complaint-meta">
+                        <span><strong>Category:</strong> hostel</span>
+                        <span><strong>Submitted:</strong> 2025-1-12</span>
+                        <span><strong>Student:</strong> STU001</span>
+                    </div>
+                    
+                </div>  -->
+
+            </div>
+
+            <!-- My Profile -->
+            <div id="my-profile" class="dashboard-section">
+                <h2 class="section-title">My Profile</h2>
+                
+                <form id="profile-form">
+                    
+                    <div class="form-group">
+                        <label>🆔 Student ID</label>
+                        <input type="text" id="profile-id" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label>🆔 Student Gr Number</label>
+                        <input type="text" id="profile-gr-number" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label>👤 Full Name</label>
+                        <input type="text" id="profile-name" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label>📧 Email Address</label>
+                        <input type="email" id="profile-email" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label>📱 Phone Number</label>
+                        <input type="tel" id="profile-phone" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label>🏢 Department</label>
+                        <input type="text" id="profile-department"  readonly>
+                        <!-- <select id="profile-department">
+                            <option value="">Select Your Department</option>
+                            <option value="computer-science">Computer Science Engineering</option>
+                            <option value="electronics">Electronics & Communication</option>
+                            <option value="mechanical">Mechanical Engineering</option>
+                            <option value="civil">Civil Engineering</option>
+                            <option value="electrical">Electrical Engineering</option>
+                            <option value="chemical">Chemical Engineering</option>
+                        </select> -->
+                    </div>
+                    <div class="form-group">
+                        <label>🧑‍🎓 Academic Year</label>
+                        <input type="text" id="profile-year" readonly>
+                        <!-- <select id="profile-year">
+                            <option value="">Select Your Year</option>
+                            <option value="1">1️⃣ First Year</option>
+                            <option value="2">2️⃣ Second Year</option>
+                            <option value="3">3️⃣ Third Year</option>
+                            <option value="4">4️⃣ Fourth Year</option>
+                        </select> -->
+                    </div>
+                    <div class="form-group">
+                        <label>🏛️ Hostel Block</label>
+                        <input type="text" id="profile-hostel" readonly>
+                        <!-- <select id="profile-hostel">
+                            <option value="">Select Hostel Block</option>
+                            <option value="phule">Phule (Boys)</option>
+                            <option value="jawahar">Jawahar (Boys)</option>
+                            <option value="jawahar">Gandhi (Boys)</option>
+                            <option value="shivaji">Chh. Shivaji (Boys)</option>
+                            <option value="tilak">Tilak (Boys)</option>
+                            <option value="vishveshwarya">Shri. Vishveshwarya (Boys)</option>
+                            <option value="raman">C. V.Raman (Boys)</option>
+                            <option value="bhabha">Homi Bhabha (Boys)</option>
+                            <option value="bhaskar">Bhaskar (Boys)</option>
+                            <option value="savitri">Savitri (Girls)</option>
+                            <option value="savitri">Saraswati (Girls)</option>
+                        </select> -->
+                    </div>
+                    <div class="form-group">
+                        <label>🚪 Room Number</label>
+                        <input type="text" id="profile-room" readonly>
+                    </div>
+                    <!-- <button type="button" class="btn" >
+                        ✔️ Update Profile
+                    </button> -->
+                    <span style="color: red; font-size: 13px; font-weight: bold;">* Please check your details. if it isn't correct then file complaint in department module </span>
+                </form>
+            </div>
+
+            <!-- AI Chatbot -->
+            <div id="ai-chatbot" class="dashboard-section">
+                <h2 class="section-title">Chatbot </h2>
+                
+                <div class="chatbot-container">
+                     <div class="chatbot-messages" id="chatbot-messages">
+                        <div class="message bot">
+                            <div class="message-content">
+                                👋 Hello! I'm your Chatbot. How can I help you with :
+                                <br>
+                                <br>💧 <strong>Water supply problems</strong>
+                                <br>🍽️ <strong>Mess/food complaints</strong>
+                                <br>📚 <strong>Library services</strong>
+                                <br>💰 <strong>Fee-related queries</strong>
+                                <br>📝 <strong>Exam information</strong>
+                                <br>⚡ <strong>Electrical problems</strong>
+                                <br>🧹 <strong>Cleanliness issues</strong>
+                                <br>⛓️‍💥 <strong>Broken Equipment</strong>
+                                <br>🕵️ <strong>Stolen / Missing items</strong>
+                                <br>🧑‍🏫 <strong>Teaching / Teacher related issues</strong>
+                                <br>🎖️ <strong>Scholarship queries</strong>
+                                <br>📝 <strong>Register a complaint</strong>
+                                <br>⌛ <strong>Complaint status</strong>
+                                <br>🚌 <strong>Transport Issue</strong>
+                                <br>🧑‍⚕️ <strong>Medical Assistance</strong>
+                                <br>🚨 <strong>Ragging / Safety Complaints</strong>
+                                <br>📞 <strong>Need contact Information</strong>
+                                <br><br>
+                                Just describe your problem and I'll provide instant solutions! 
+                            </div>
+                        </div>
+                    </div>
+                    <div class="chatbot-input">
+                        <input type="text" id="chatbot-input" placeholder="Type your question or problem here... ">
+                        <button class="btn" onclick="sendChatMessage()" id="send-chat-to-chatbot">Send ✈️</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Complaint Form Modal -->
+        <div id="complaint-modal" class="modal">
+            <div class="modal-content">
+                <h3 style="margin-bottom: 30px; font-size: 1.8rem;">Register New Complaint</h3>
+                <form id="complaint-form" onsubmit="submitComplaint(event)">
+                    <div class="form-group">
+                        <label>Category </label>
+                        <select id="complaint-category" required>
+                            <option value="">Select Category</option>
+                            <option value="hostel">Hostel Issues</option>
+                            <option value="department">Department Issues</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group" id="subcategory-group" >
+                        <label>Sub-Category </label>
+                        <select id="complaint-subcategory">
+                            <option value="">Select Sub-Category</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Subject </label>
+                        <input type="text" id="complaint-subject" required placeholder="Brief description of the issue">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Detailed Description </label>
+                        <textarea id="complaint-description" rows="5" required placeholder="Provide detailed information about your complaint. Include location, time, and any other relevant details."></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Location / Room Number</label>
+                        <input type="text" id="complaint-location" placeholder="e.g., Room 301, Block A, Computer Lab 2">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Priority Level</label>
+                        <select id="complaint-priority" required>
+                            <option value="low">🟢 Low - Can wait a few days</option>
+                            <option value="medium" selected>🔵 Medium - Should be addressed soon</option>
+                            <option value="high">🔴 High - Urgent attention needed</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Do you want to hide your inforamtion ❓ </label>
+                        <select name="" id="hide-informatoin" required>
+                            <option value="yes">✅ Yes</option>
+                            <option value="no" selected>❌ No</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Upload Proof / PDF</label>
+                        <input type="file" id="complaint-proof" accept=".pdf">
+                    </div>
+
+                    <div style="display: flex; gap: 15px; margin-top: 30px; flex-wrap: wrap;">
+                        <button type="submit" class="btn btn-success" id="complaint-submit-btn">
+                            ✅ Submit
+                        </button>
+                        <button type="button" class="btn btn-cancel" onclick="closeModal()">
+                            ❌ Cancel
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        
+        <!-- Edit Complaint Form Modal -->
+        <div id="edit-complaint-modal" class="modal">
+            <div class="modal-content">
+                <h3 style="margin-bottom: 30px; font-size: 1.8rem;">Register New Complaint</h3>
+                <form id="edit-complaint-form" onsubmit="submitComplaint(event)">
+                    <div class="form-group">
+                        <label>Category </label>
+                        <select id="edit-complaint-category" required>
+                            <option value="">Select Category</option>
+                            <option value="hostel">Hostel Issues</option>
+                            <option value="department">Department Issues</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group" id="edit-subcategory-group" >
+                        <label>Sub-Category </label>
+                        <select id="edit-complaint-subcategory">
+                            <option value="">Select Sub-Category</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Subject </label>
+                        <input type="text" id="edit-complaint-subject" required placeholder="Brief description of the issue">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Detailed Description </label>
+                        <textarea id="edit-complaint-description" rows="5" required placeholder="Provide detailed information about your complaint. Include location, time, and any other relevant details."></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Location / Room Number</label>
+                        <input type="text" id="edit-complaint-location" placeholder="e.g., Room 301, Block A, Computer Lab 2">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Priority Level</label>
+                        <select id="edit-complaint-priority" required>
+                            <option value="low">🟢 Low - Can wait a few days</option>
+                            <option value="medium" selected>🔵 Medium - Should be addressed soon</option>
+                            <option value="high">🔴 High - Urgent attention needed</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Do you want to hide your inforamtion ❓ </label>
+                        <select name="" id="edit-hide-informatoin" required>
+                            <option value="yes">✅ Yes</option>
+                            <option value="no" selected>❌ No</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Upload Proof / PDF</label>
+                        <input type="file" id="edit-complaint-proof" accept=".pdf">
+                        <div id="existing-proof"></div>
+                    </div>
+
+                    <div style="display: flex; gap: 15px; margin-top: 30px; flex-wrap: wrap;">
+                        <button type="submit" class="btn btn-success" id="edit-complaint-submit-btn">
+                            ✅ Update Complaint
+                        </button>
+                        <button type="button" class="btn btn-cancel" onclick="closeModal()">
+                            ❌ Cancel
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        
+
+    </div>
+
+    <!-- <script type="module" src="student.js"></script> -->
+
+
+
+<script type="module">
+
+    import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js';
+    import { getAuth } from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js';
+    import { getFirestore, collection, doc, setDoc, getDocs, getDoc, updateDoc } from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js';
+
+    // Firebase configuration
+    const firebaseConfig = {
+        apiKey: "AIzaSyB3jC4rKypCYUc0NhlJa-1kuAkmFGxGS88",
+        authDomain: "e-resolve-tkiet.firebaseapp.com",
+        projectId: "e-resolve-tkiet",
+        storageBucket: "e-resolve-tkiet.firebasestorage.app",
+        messagingSenderId: "876305569079",
+        appId: "1:876305569079:web:14b890b4704b52e7cfb6b2",
+        measurementId: "G-7SEN34J28J"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    
+
+
+    // window.onload = function() {
+    //     checkLogin();
+    //     updateStats();
+    //     loadUserData();
+    //     loadComplaints();
+    //     setupCategoryChange();
+    // };
+
+    let currentUser = null;
+
+    window.addEventListener("DOMContentLoaded", () => {
+        checkLogin();
+        loadUserData();
+        setupCategoryChange();
+        loadComplaints();
+        updateStats();
+    });
+
+
+    function checkLogin() {
+        const userData = localStorage.getItem('currentUser');
+        if (!userData) {
+            window.location.href = 'login2.html';
+            return;
+        }
+        
+        currentUser = JSON.parse(userData);
+        if (currentUser.type !== 'student') {
+            alert('Access denied. This is a student portal.');
+            window.location.href = 'login2.html';
+            return;
+        }
+
+        // document.getElementById('welcome-text').textContent = `Welcome, ${currentUser.name}!`;
+        document.getElementById('welcome-text').textContent = `Welcome, ${currentUser.name.split(" ")[0]} !`;
+        document.getElementById('user-id').textContent = currentUser.id;
+        document.getElementById('user-avatar').textContent = currentUser.name.charAt(0).toUpperCase();
+    }
+
+    function loadUserData() {
+        if (currentUser) {
+            document.getElementById('profile-id').value = currentUser.id;
+            document.getElementById('profile-name').value = currentUser.name || '';
+            document.getElementById('profile-email').value = currentUser.email || '';
+            document.getElementById('profile-phone').value = currentUser.phone || '';
+            document.getElementById('profile-department').value = currentUser.department || '';
+            document.getElementById('profile-year').value = currentUser.year || '';
+            document.getElementById('profile-hostel').value = currentUser.hostel || '';
+            document.getElementById('profile-room').value = currentUser.room || '';
+            document.getElementById('profile-gr-number').value = currentUser.grNumber;
+        }
+    }
+
+    function logout() {
+        if (confirm('Are you sure you want to LOGOUT ?\n\n')) {
+
+            localStorage.removeItem('currentUser');
+            
+            alert('Logged out successfully!\n\n');
+            
+            window.location.href = 'login2.html';
+        }
+    }
+
+    function showSection(sectionId) {
+
+        document.querySelectorAll('.dashboard-section').forEach(section => {
+            section.classList.remove('active');
+        });
+        
+        document.querySelectorAll('.nav-btn').forEach(btn => {
+            btn.classList.remove('active');
+        });
+        
+        document.getElementById(sectionId).classList.add('active');
+        
+        // event.target.classList.add('active');
+        document.querySelector(`[onclick="showSection('${sectionId}')"]`).classList.add('active');
+
+        switch(sectionId) {
+            case 'view-complaints':
+                loadAllComplaints();
+                break;
+            case 'my-complaints':
+                loadMyComplaints();
+                break;
+            case 'ai-chatbot':
+                // Scroll to bottom of chat
+                setTimeout(() => {
+                    const chatContainer = document.getElementById('chatbot-messages');
+                    chatContainer.scrollTop = chatContainer.scrollHeight;
+                }, 1000);
+                break;
+        }
+        
+    }
+
+    function updateStats() {
+        const myComplaints = complaints.filter(c => c.studentId === currentUser.id);
+        const pending = myComplaints.filter(c => c.status === 'pending').length;
+        const progress = myComplaints.filter(c => c.status === 'progress').length;
+        const resolved = myComplaints.filter(c => c.status === 'resolved').length;
+        document.getElementById('total-complaints').textContent = myComplaints.length;
+        document.getElementById('pending-complaints').textContent = pending;
+        document.getElementById('progress-complaints').textContent = progress;
+        document.getElementById('resolved-complaints').textContent = resolved;
+    }
+
+    async function saveComplaintToFirestore(complaint) {
+        try {
+            const docRef = doc(collection(db, "complaints"), complaint.id);
+            await setDoc(docRef, complaint);
+            console.log("Complaint saved to Firestore");
+        } catch (error) {
+            console.error("Error saving complaint:", error);
+            alert("Failed to save complaint. Check console.");
+        }
+    }
+
+
+
+    let complaints = [];
+
+    const subcategories = {
+        hostel: [
+            {value: 'water', label: 'Water & Plumbing'},
+            {value: 'electrical', label: 'Electrical Issues'},
+            {value: 'mess', label: 'Mess & Food'},
+            {value: 'cleaning', label: 'Cleanliness'},
+            {value: 'security', label: 'Security'},
+            {value: 'maintenance', label: 'Room Maintenance'},
+            {value: 'broken', label: 'Broken Item Issues'},
+            {value: 'stolen', label: 'Stolen Item Issues'},
+            {value: 'other', label: 'Other Issues'}
+        ],
+        department: [
+            {value: 'lab', label: 'Lab Equipment'},
+            {value: 'library', label: 'Library Services'},
+            {value: 'classroom', label: 'Classroom Issues'},
+            {value: 'exam', label: 'Examination'},
+            {value: 'faculty', label: 'Faculty Related'},
+            {value: 'academic', label: 'Academic Issues'},
+            {value: 'broken', label: 'Broken Item Issues'},
+            {value: 'administration', label: 'Administration'},
+            {value: 'stolen', label: 'Stolen Item Issues'},
+            {value: 'other', label: 'Other Issues'}
+        ]
+    };
+
+    function setupCategoryChange() {
+        document.getElementById('complaint-category').addEventListener('change', function() {
+            const category = this.value;
+            // const subcategoryGroup = document.getElementById('subcategory-group');
+            const subcategorySelect = document.getElementById('complaint-subcategory');
+            
+            if (category && subcategories[category]) {
+                // subcategoryGroup.style.display = 'block';
+                subcategorySelect.innerHTML = '<option value="">Select Sub-Category</option>';
+                
+                subcategories[category].forEach(sub => {
+                    const option = document.createElement('option');
+                    option.value = sub.value;
+                    option.textContent = sub.label;
+                    subcategorySelect.appendChild(option);
+                });
+            } else {
+                // subcategoryGroup.style.display = 'none';
+            }
+        });
+    }
+
+    function showComplaintForm() {
+        document.getElementById('complaint-modal').classList.add('active');
+        document.getElementById('complaint-form').reset();
+    }
+
+    function toBase64(file) {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = () => resolve(reader.result);
+            reader.onerror = error => reject(error);
+        });
+    }
+
+
+    async function submitComplaint(event) {
+        event.preventDefault();
+        
+        const category = document.getElementById('complaint-category').value;
+        const subcategory = document.getElementById('complaint-subcategory').value;
+        const subject = document.getElementById('complaint-subject').value;
+        const description = document.getElementById('complaint-description').value;
+        const location = document.getElementById('complaint-location').value;
+        const priority = document.getElementById('complaint-priority').value;
+        const hide = document.getElementById('hide-informatoin').value;
+        
+        // Validation
+        if (!category || !subject || !description) {
+            alert('Please fill in all required fields!');
+            return;
+        }
+
+        if (category !== 'general' && !subcategory) {
+            alert('Please select a sub-category!');
+            return;
+        }
+
+        if (description.length < 10) {
+            alert('Please provide more detailed description (at least 10 characters).');
+            return;
+        }
+
+        if (currentUser.restrictedUntil) {
+            if (new Date(currentUser.restrictedUntil) > new Date()) {
+                alert("You are restricted from filing complaints until " + currentUser.restrictedUntil);
+                return;
+            }
+        }
+
+
+        // --- FILE VALIDATION FOR PDF ONLY (Max 500 KB) ---
+        const fileInput = document.getElementById('complaint-proof');
+        let proofFileBase64 = null; // default if no file uploaded
+
+        if (fileInput && fileInput.files && fileInput.files.length > 0) {
+            const file = fileInput.files[0];
+
+            console.log("FILE UPLOADED:", file);
+            console.log("FILE SIZE:", file.size);
+
+            // Check file type
+            if (file.type !== "application/pdf") {
+                alert("Only PDF files are allowed!");
+                return;
+            }
+
+            // Check file size (500 KB max)
+            const maxSize = 500 * 1024; // 500 KB
+            if (file.size > maxSize) {
+                alert("PDF size must be less than 500 KB!");
+                return;
+            }
+
+            // Convert PDF to Base64 string
+            proofFileBase64 = await toBase64(file);
+        }
+
+
+        
+        const newComplaint = {
+            id: 'COMP' + String(complaints.length + 1).padStart(3, '0'),
+            studentId: currentUser.id,
+            studentName: currentUser.name,
+            category,
+            subcategory: subcategory || 'general',
+            subject,
+            description,
+            location: location || 'Not specified',
+            priority,
+            status: 'pending',
+            hide,
+            date: new Date().toISOString().split('T')[0],
+            response: '',
+            feedback: '',
+            responseDate: '',
+            restrictedUntil: '',
+            proof: proofFileBase64 
+        };
+
+        // const newComplaint = {
+        //     id: 'COMP' + String(complaints.length + 1).padStart(3, '0'),
+        //     studentId: currentUser.id,
+        //     studentName: currentUser.name,
+        //     category,
+        //     subcategory: subcategory || 'general',
+        //     subject,
+        //     description,
+        //     location: location || 'Not specified',
+        //     priority,
+        //     status: 'resolved',
+        //     hide,
+        //     date: new Date().toISOString().split('T')[0],
+        //     response: 'response from the staff',
+        //     feedback: '',
+        //     responseDate: '1.23.4567'
+        // };
+        
+        complaints.push(newComplaint);
+        await saveComplaintToFirestore(newComplaint);
+
+        
+        // Reset form and close modal
+        document.getElementById('complaint-form').reset();
+        // document.getElementById('complaint-subcategory').reset();
+        // document.getElementById('complaint-form').addEventListener('reset', () => {
+        //     const sub = document.getElementById('subcategory-group');
+        //     sub.innerHTML = `<label>Sub-Category </label>
+        //                     <select id="complaint-subcategory">
+        //                         <option value="">Select Sub-Category</option>
+        //                     </select>`;
+        // });
+
+        document.getElementById('subcategory-group').innerHTML = `
+            <label>Sub-Category </label>
+            <select id="complaint-subcategory">
+                <option value="">Select Sub-Category</option>
+            </select>
+        `;
+
+
+        closeModal();
+        
+        // Refresh displays
+        loadMyComplaints();
+        updateStats();
+        
+    
+        
+        alert(` Complaint submitted successfully! \n\n
+                Complaint ID : ${newComplaint.id}
+                Category        : ${category.toUpperCase()}
+                Priority           : ${priority.toUpperCase()}\n
+                Track progress in "My Complaints" section.`
+        );
+        
+        console.log("FILE SIZE:", file.size);
+
+        setTimeout(() => {
+            document.getElementById('my-complaints').classList.add('active');
+        }, 1000);
+        
+    }
+
+    function loadMyComplaints() {
+        const container = document.getElementById('my-complaints-list');
+        const myComplaints = complaints.filter(c => c.studentId === currentUser.id);
+        
+        container.innerHTML = '';
+        
+        if (myComplaints.length === 0) {
+            container.innerHTML = `
+                <div style="margin:50px 0 0 0 ; text-align:center;">
+                    <h2>No complaints found</h2><br>
+                    <p  style="margin:-20px 0 0 0 ;">You haven't submitted any complaints. <strong>Register New Complaint</strong> </p>
+                </div>
+            `;
+            return;
+        }
+
+        myComplaints.sort((a, b) => new Date(b.date) - new Date(a.date))
+            .forEach(complaint => {
+                container.appendChild(createComplaintCard(complaint, true));
+        });
+    }
+
+    async function loadComplaints() {
+
+        complaints = []; // reset array
+
+        const querySnapshot = await getDocs(collection(db, "complaints"));
+
+        querySnapshot.forEach((doc) => {
+            complaints.push(doc.data());
+        });
+
+        loadAllComplaints();
+        loadMyComplaints();
+        updateStats();
+    }
+
+    function loadAllComplaints() {
+        const container = document.getElementById('all-complaints-list');
+        container.innerHTML = '<div style="margin:100px 0 0 0 ; text-align:center; font-weight:bolder; font-size:20px;">Loading complaints...</div>';
+        if (complaints.length === 0) {
+            container.innerHTML = `
+                <div  style="margin:100px 0 0 0 ; text-align:center;">
+                    <h2>No complaints found</h2>
+                    <p>No Complaints Registered by any student</p>
+                </div>
+            `;
+            return;
+        }
+
+        complaints.sort((a, b) => {
+            const idA = parseInt(a.id.replace("COMP", ""));
+            const idB = parseInt(b.id.replace("COMP", ""));
+            return idB - idA;
+        });
+
+        setTimeout(() => {
+            container.innerHTML = '';
+            complaints.forEach(complaint => {
+                container.appendChild(createComplaintCard(complaint, false));
+            });
+        }, 500);
+        
+    }
+
+    function createComplaintCard(complaint , isMyComplaint) {
+        const card = document.createElement('div');
+        card.className = `complaint-card ${complaint.priority === 'high' ? 'high-priority' : ''} ${complaint.priority === 'low' ? 'resolved' : ''}`;
+        
+
+        const subcategoryLabels = {
+            'water': 'Water & Plumbing', 'electrical': 'Electrical Issues', 'mess': 'Mess & Food',
+            'cleaning': 'Cleanliness', 'security': 'Security', 'maintenance': 'Room Maintenance',
+            'lab': 'Lab Equipment', 'library': 'Library Services',
+            'classroom': 'Classroom Issues', 'exam': 'Examination', 'faculty': 'Faculty Related',
+            'academic': 'Academic Issues', 'administration': 'Administration','broken':'Broken Items' , 'stolen':'Stolen Items','other':'Other Issues'
+        };
+        
+        
+        card.innerHTML = `
+            <div class="complaint-header"  style="display: flex;">
+                <div class="complaint-id ${complaint.priority === 'high' ? 'complaint-header-high' : ''} ${complaint.priority === 'low' ? 'complaint-header-low' : ''}" >
+                    ${subcategoryLabels[complaint.subcategory] || complaint.subcategory}  <br>
+                    <span style="font-size: 15px;">${complaint.id}</span>
+                </div>
+                <div  style="position:absolute ; right: 310px;">
+                    <!-- <span>${complaint.proof && complaint.proof.length > 0 ? `<span><img src="download3.png" ><span  style="font-weight:bolder;"> PDF</span></span>` : ''}</span> -->
+                    
+                    <span>
+                        ${complaint.proof ? `
+                            ${complaint.hide === 'no' ?`
+                                <a href="${complaint.proof}" download="complaint-${complaint.id}.pdf" style="text-decoration:none; color:black;">
+                                    <span>
+                                        <img src="download3.png" style="width:20px; vertical-align:middle;">
+                                        <span style="font-weight:bolder; cursor:pointer;"> PDF</span>
+                                    </span>
+                                </a>
+                            `:`
+                                <span>
+                                    <img src="download3.png" style="width:20px; vertical-align:middle;">
+                                    <span style="font-weight:bolder; cursor:pointer;"> PDF</span>
+                                </span>
+                            `} 
+                            
+                        ` : ''}
+                    </span>
+                </div>
+                <div  style="position:absolute ; right: 30px;">
+                    <span class="status-badge status-${complaint.status}">
+                        ${complaint.status === 'pending' ? '⏳' : complaint.status === 'progress' ? '🔄' : '✅'} 
+                        ${complaint.status.toUpperCase()}
+                    </span>
+                    <span class="priority-badge priority-${complaint.priority}">
+                        ${complaint.priority === 'high' ? '🔴' : complaint.priority === 'medium' ? '🔵' : '🟢'} 
+                        ${complaint.priority.toUpperCase()}
+                    </span>
+                </div>
+            </div>
+            ${complaint.status === 'pending' &&  complaint.studentId === currentUser.id? `
+                <div style=" position: absolute; right: 20px; top: 80px;">
+                    <button class="btn btn-success"  onclick="editComplaint('${complaint.id}')" > Edit Complaint </button>
+                </div>
+            ` : ''}
+            
+            <div class="complaint-content">
+                <h2>${complaint.subject}</h2>
+                <p>${complaint.description}</p>
+                ${complaint.location ? `<p><strong>Location:</strong> ${complaint.location}</p>` : ''}
+            </div>
+
+            ${complaint.response ? `
+                <div class="response-section complaint-card  ${complaint.priority === 'high' ? 'high-priority' : ''} ${complaint.priority === 'low' ? 'resolved' : ''}">
+                    <strong>Complaint Response:</strong><br>
+                    ${complaint.response}
+                    ${complaint.responseDate ? `<br><small><strong>Response Date:</strong> ${complaint.responseDate}</small>` : ''}
+                </div>
+            ` : ''}
+            ${complaint.feedback ? `
+                <div class="feedback-section complaint-card  ${complaint.priority === 'high' ? 'high-priority' : ''} ${complaint.priority === 'low' ? 'resolved' : ''}">
+                    <strong>✏️ ${complaint.hide === 'no' ? `${complaint.studentName.toUpperCase()} (${complaint.studentId})` : 'Anonymous'} Feedback:</strong><br>
+                    <p class="student-feedback">${complaint.feedback}</p>
+                    <button class="btn btn-cancel"  onclick="deleteFeedback('${complaint.id}')">Delete Feedback</button>
+
+                </div>
+                ` : `
+                ${isMyComplaint ? `
+                    ${complaint.status === 'resolved' && !complaint.feedback ? `
+                        <button class="btn btn-success"  onclick="document.getElementById('feedback-form-${complaint.id}').style.display = 'block';">
+                            Give Feedback
+                        </button>
+
+                        <p class="student-feedback">${complaint.feedback || ''}</p>
+                        <div class="feedback-form" id="feedback-form-${complaint.id}" style="display: none;">
+                            <h5>Please provide your feedback</h5>
+                            <textarea 
+                                id="feedback-${complaint.id}" 
+                                placeholder="How satisfied are you with our service ? please provide your feedback" 
+                                rows="3" 
+                                style="width: 100%; padding: 12px; border: 2px solid ; border-radius: 8px; resize: vertical; margin-bottom: 10px; font-size:18px;"
+                            ></textarea>
+                            <button class="btn btn-success" onclick="submitFeedback('${complaint.id}')">
+                                ✅ Submit Feedback
+                            </button>
+                        </div>
+                    ` : ''}
+                ` : ``}
+            `}
+            <div class="complaint-meta">
+                <span><strong>Category:</strong> ${complaint.category.toUpperCase()}</span>
+                <span><strong>Submitted:</strong> ${complaint.date}</span>
+                <span><strong>Student:</strong> ${complaint.hide === 'no' ? `${complaint.studentName.toUpperCase()} (${complaint.studentId})` : 'Anonymous'}</span>
+            </div>
+            
+        `;
+        
+        return card;
+    }
+
+    async function deleteFeedback(complaintId) {
+        if (!confirm('Do you want to delete your feedback?')) return;
+
+        const complaint = complaints.find(c => c.id === complaintId);
+        if (!complaint) {
+            alert('Complaint not found!');
+            return;
+        }
+
+        const complaintRef = doc(db, "complaints", complaintId);
+        await updateDoc(complaintRef, {
+            feedback: ''
+        });
+        // complaint.feedback = '';
+
+        loadComplaints();
+
+    }
+
+
+    function editComplaint(complaintId) {
+        const complaint = complaints.find(c => c.id === complaintId);
+        if (!complaint) return alert("Complaint not found!");
+        if (complaint.status !== "pending") return alert("Only pending complaints can be edited.");
+
+        document.getElementById("edit-complaint-modal").classList.add("active");
+
+        document.getElementById("edit-complaint-category").value = complaint.category;
+
+        const subSelect = document.getElementById("edit-complaint-subcategory");
+        subSelect.innerHTML = `<option value="">Select Sub-Category</option>`;
+
+        if (subcategories[complaint.category]) {
+            subcategories[complaint.category].forEach(sub => {
+                const option = document.createElement("option");
+                option.value = sub.value;
+                option.textContent = sub.label;
+                subSelect.appendChild(option);
+            });
+        }
+        
+        subSelect.value = complaint.subcategory;
+        // document.getElementById("edit-complaint-subcategory").value = complaint.subcategory;
+        document.getElementById("edit-complaint-category").addEventListener("change", function () {
+            const category = this.value;
+            const subSelect = document.getElementById("edit-complaint-subcategory");
+
+            // CLEAR old options
+            subSelect.innerHTML = `<option value="">Select Sub-Category</option>`;
+
+            // ADD new options
+            if (subcategories[category]) {
+                subcategories[category].forEach(sub => {
+                    const option = document.createElement("option");
+                    option.value = sub.value;
+                    option.textContent = sub.label;
+                    subSelect.appendChild(option);
+                });
+            }
+        });
+
+
+        // subSelect.value = complaint.subcategory;
+
+        document.getElementById("edit-complaint-subject").value = complaint.subject;
+        document.getElementById("edit-complaint-description").value = complaint.description;
+        document.getElementById("edit-complaint-location").value = complaint.location;
+        document.getElementById("edit-complaint-priority").value = complaint.priority;
+        document.getElementById("edit-hide-informatoin").value = complaint.hide;
+        // document.getElementById("edit-complaint-proof").value = complaint.proof;
+
+        if (complaint.proof) {
+            document.getElementById("existing-proof").innerHTML = `
+                <a href="${complaint.proof}" download="complaint-${complaint.id}.pdf" 
+                    style="text-decoration:none; color:black;">
+                    <img src="download3.png" style="width:20px; vertical-align:middle;">
+                    <strong>View Uploaded PDF</strong>
+                </a>
+            `;
+        } else {
+            document.getElementById("existing-proof").innerHTML = "<i>No file uploaded</i>";
+        }
+
+        // Button Logic Fix
+        const submitBtn = document.getElementById("edit-complaint-submit-btn");
+
+        // 🔥 Remove old listeners properly
+        const newBtn = submitBtn.cloneNode(true);
+        submitBtn.parentNode.replaceChild(newBtn, submitBtn);
+
+        newBtn.addEventListener("click", async function (e) {
+            e.preventDefault();
+
+            const category = document.getElementById("edit-complaint-category").value;
+            const subcategory = document.getElementById("edit-complaint-subcategory").value;
+            const subject = document.getElementById("edit-complaint-subject").value;
+            const description = document.getElementById("edit-complaint-description").value;
+            const location = document.getElementById("edit-complaint-location").value;
+            const priority = document.getElementById("edit-complaint-priority").value;
+            const hide = document.getElementById("edit-hide-informatoin").value;
+
+            if (!category || !subject || !description) {
+                alert("Please fill all required fields!");
+                return;
+            }
+
+            const fileInput = document.getElementById("edit-complaint-proof");
+            if (fileInput.files.length > 0) {
+                const file = fileInput.files[0];
+
+                if (file.type !== "application/pdf") {
+                    alert("Only PDF files are allowed!");
+                    return;
+                }
+
+                const maxSize = 500 * 1024; // 500KB
+                if (file.size > maxSize) {
+                    alert("PDF size must be less than 500 KB!");
+                    return;
+                }
+
+                complaint.proof = await toBase64(file);
+
+            } else {
+                // keep existing file
+                complaint.proof = complaint.proof;
+            }
+
+            // ✔ Apply edits only to this complaint
+            complaint.category = category;
+            complaint.subcategory = subcategory || "general";
+            complaint.subject = subject;
+            complaint.description = description;
+            complaint.location = location;
+            complaint.priority = priority;
+            complaint.hide = hide;
+
+            // await updateComplaintInFirestore(complaint.id, {
+            //     category: complaint.category,
+            //     subcategory: complaint.subcategory,
+            //     subject: complaint.subject,
+            //     description: complaint.description,
+            //     location: complaint.location,
+            //     priority: complaint.priority,
+            //     hide: complaint.hide,
+            //     proof: complaint.proof
+            // });
+
+            const complaintRef = doc(db, "complaints", complaintId);
+            await updateDoc(complaintRef, {
+                category: complaint.category,
+                subcategory: complaint.subcategory,
+                subject: complaint.subject,
+                description: complaint.description,
+                location: complaint.location,
+                priority: complaint.priority,
+                hide: complaint.hide,
+                proof: complaint.proof || null
+            });
+
+            closeModal();
+            loadComplaints();
+            updateStats();
+
+            alert("Complaint updated successfully!");
+        });
+    }
+
+
+
+    async function submitFeedback(complaintId) {
+        const feedback = document.getElementById(`feedback-${complaintId}`).value.trim();
+        if (!feedback) {
+            alert('Please enter your feedback .');
+            return;
+        }
+        
+        if (feedback.length < 10) {
+            alert('Please provide more detailed feedback (at least 10 characters).');
+            return;
+        }
+        
+        const complaint = complaints.find(c => c.id === complaintId);
+        if (complaint) {
+            complaint.feedback = feedback;
+            loadComplaints();
+
+            const complaintRef = doc(db, "complaints", complaintId);
+            await updateDoc(complaintRef, {
+                feedback: complaint.feedback
+            });
+            
+            const feedbackElement = document.getElementById(`feedback-${complaintId}`);
+            if (feedbackElement) {
+                feedbackElement.style.background = '#d4edda';
+                feedbackElement.style.border = '2px solid #28a745';
+                feedbackElement.value = 'Feedback submitted successfully!';
+                // feedbackElement.disabled = true;
+            }
+        }
+    }
+
+    function closeModal() {
+        document.querySelectorAll('.modal').forEach(modal => {
+            modal.classList.remove('active');
+        });
+    }
+
+    function filterComplaints() {
+        const category = document.getElementById('filter-category').value;
+        const status = document.getElementById('filter-status').value;
+        const priority = document.getElementById('filter-priority').value;
+        
+        let filteredComplaints = [...complaints];
+        
+        if (category) {
+            filteredComplaints = filteredComplaints.filter(c => c.category === category);
+        }
+        
+        if (status) {
+            filteredComplaints = filteredComplaints.filter(c => c.status === status);
+        }
+        
+        if (priority) {
+            filteredComplaints = filteredComplaints.filter(c => c.priority === priority);
+        }
+        
+        const container = document.getElementById('all-complaints-list');
+        container.innerHTML = '';
+        
+        if (filteredComplaints.length === 0) {
+            container.innerHTML = `
+                <div  style="margin:50px 0 0 0 ; text-align:center;">
+                    <h3>No complaints found</h3>
+                    <p>No complaints match your current filter criteria.</p>
+                </div>
+            `;
+            return;
+        }
+        
+        filteredComplaints.forEach(complaint => {
+            container.appendChild(createComplaintCard(complaint, false));
+        });
+    }
+
+    function filterMyComplaints() {
+        const category = document.getElementById('my-filter-category').value;
+        const status = document.getElementById('my-filter-status').value;
+        
+        let myComplaints = complaints.filter(c => c.studentId === currentUser.id);
+        
+        if (category) {
+            myComplaints = myComplaints.filter(c => c.category === category);
+        }
+        
+        if (status) {
+            myComplaints = myComplaints.filter(c => c.status === status);
+        }
+        
+        const container = document.getElementById('my-complaints-list');
+        container.innerHTML = '';
+        
+        if (myComplaints.length === 0) {
+            container.innerHTML = `
+                <div  style="margin:50px 0 0 0 ; text-align:center;">
+                    <h3>No complaints found</h3>
+                    <p>No complaints match your current filter criteria.</p>
+                </div>
+            `;
+            return;
+        }
+        
+        myComplaints.sort((a, b) => new Date(b.date) - new Date(a.date))
+            .forEach(complaint => {
+                container.appendChild(createComplaintCard(complaint, true));
+            });
+    }
+
+    function searchComplaints() {
+        const searchTerm = document.getElementById('search-input').value.toLowerCase();
+        
+        if (!searchTerm) {
+            loadAllComplaints();
+            return;
+        }
+
+        const subcategoryLabels = {
+            'water': 'Water & Plumbing', 'electrical': 'Electrical Issues', 'mess': 'Mess & Food',
+            'cleaning': 'Cleanliness', 'security': 'Security', 'maintenance': 'Room Maintenance',
+            'lab': 'Lab Equipment', 'library': 'Library Services',
+            'classroom': 'Classroom Issues', 'exam': 'Examination', 'faculty': 'Faculty Related',
+            'academic': 'Academic Issues', 'administration': 'Administration','broken':'Broken Items' , 'stolen':'Stolen Items','other':'Other Issues'
+        };
+        
+        // const searchResults = complaints.filter(complaint => 
+        //     complaint.id.toLowerCase().includes(searchTerm) ||
+        //     complaint.subject.toLowerCase().includes(searchTerm) ||
+        //     complaint.location.toLowerCase().includes(searchTerm) ||
+        //     if(complaint.hide === "yes"){
+        //         complaint.studentId.toLowerCase().includes(searchTerm) ||
+        //         complaint.studentName.toLowerCase().includes(searchTerm)
+        //     }
+            
+        // );
+
+        const searchResults = complaints.filter(complaint => {
+
+            const matchId = complaint.id.toLowerCase().includes(searchTerm);
+            const matchSubject = complaint.subject.toLowerCase().includes(searchTerm);
+            const matchLocation = complaint.location.toLowerCase().includes(searchTerm);
+            // const subcategory = complaint.subcategory.toLowerCase().includes(searchTerm);
+            const subcategory = subcategoryLabels[complaint.subcategory].toLowerCase().includes(searchTerm);
+
+            let matchStudent = false;
+            if (complaint.hide === "no") {
+                matchStudent =
+                    complaint.studentId.toLowerCase().includes(searchTerm) ||
+                    complaint.studentName.toLowerCase().includes(searchTerm);
+            }
+
+            return matchId || matchSubject || matchLocation || matchStudent || subcategory;
+        });
+
+        
+        const container = document.getElementById('all-complaints-list');
+        container.innerHTML = '';
+        
+        if (searchResults.length === 0) {
+            container.innerHTML = `
+                <div  style="margin:50px 0 0 0 ; text-align:center;">
+                    <h3>No search results</h3>
+                    <p>No complaints found matching <strong>"${searchTerm}"</strong>.</p>
+                </div>
+            `;
+            return;
+        }
+        
+        searchResults.forEach(complaint => {
+            container.appendChild(createComplaintCard(complaint, false));
+        });
+    }
+
+    const chatbotResponses = {
+        'water': {
+            response: `💧 <strong>Water Supply Issue Solutions:</strong><br><br>
+            <strong>For higher Priority / immediate action</strong><br>
+            1. water leaking in room<br>
+            2. water flooding in room due to broken tap<br><br>
+            <strong>other Issue Solutions:</strong><br>
+            1. broken tap : shut off the water valves <br><br>
+
+            If the problem persists for more than 3 hours, please file a formal complaint for faster resolution with higher priority only if necessary! `,
+            keywords: ['water', 'tap', 'bathroom', 'shower', 'pipeline', 'plumbing','leakage']
+        },
+
+        'safety': {
+            response: `🚨 <strong>Ragging / Safety Concerns:</strong><br><br>
+            <strong>Immediate Action:</strong><br>
+            1. Contact anti-ragging committee or warden.<br>
+            2. Report anonymously via grievance portal if needed.<br>
+            3. For physical threat, contact security guard or police helpline.<br><br>
+
+            <strong>Emergency Contacts:</strong><br>
+            • Security: +91 9874512300<br>
+            • Warden: +91 9546217530<br>
+            • Anti-Ragging Cell: antiragging@tkiet.com<br>
+            • Helpline: 1800-180-5522 (UGC 24x7)<br><br>
+
+            <strong>Note:</strong> Zero tolerance policy for ragging or harassment.`,
+            keywords: ['ragging', 'fight', 'safety', 'harassment', 'abuse', 'security', 'threat']
+        },
+
+        
+        'mess': {
+            response: `🍽️ <strong>Mess & Food Issue Resolution:</strong><br><br>
+            <strong>Immediate Action:</strong><br>
+            1. Speak directly with the mess manager on duty<br>
+            2. Document the issue (photo if food quality is bad)<br>
+            3. Finding of rat or cockroaches in mess <br><br>
+            <strong>Reporting Channels:</strong><br>
+            • Mess Committee Representative: +91 4563258920<br>
+            • Hostel Warden: +91 4563258920<br><br>
+            <strong>Serious Issues:</strong><br>
+            • Food poisoning: Visit medical center immediately +91 4563258920<br>
+            • Hygiene problems: Report to health officer<br>
+            • rotten ingredient: Report to health officer<br>
+            • Billing disputes: Contact accounts section<br><br>`,
+            keywords: ['mess', 'food', 'eating', 'quality', 'hygiene', 'menu', 'dinner', 'lunch', 'breakfast','rat']
+        },
+
+        'library': {
+            response: `📚 <strong>Library Services & Support:</strong><br><br>
+            <strong>Common Solutions:</strong><br>
+            1. Create library card: Go to the library staff<br>
+            2. Study rooms : 9:00 AM - 12:30 AM<br>
+            3. Pay any pending fines : at library counter<br><br>
+            <strong>Contact Information:</strong><br>
+            • Main desk: +91 9685741230<br>
+            • Email: library@gmail.com<br><br>
+            <strong>Services:</strong><br>
+            • Book reservation, renewal,fines<br>
+            • Study room booking, printing services<br>
+            `,
+            keywords: ['library', 'book', 'study', 'reading', 'issue', 'return', 'fine']
+        },
+
+        'fee': {
+            response: `💰 <strong>Fee & Payment Related Queries:</strong><br><br>
+            <strong>Payment Options:</strong><br>
+            1. Online: tkiet student portal (visit website)<br>
+            2. UPI: college@okaxis (for small amounts upto ₹20000/-)<br>
+            3. Exam fee : tkiet fee payment (visit website)<br><br>
+            <strong>Common Issues:</strong><br>
+            • Payment not reflected: Wait 24 hours or contact accounts<br>
+            • Receipt not received: Download from student portal<br>
+            • Refund queries: Submit form at accounts section<br><br>
+            <strong>Contact Accounts:</strong><br>
+            • Office hours: 9 AM - 5 PM (Mon-Sat)<br>
+            • Phone: +91 4563258920<br>
+            • Email: accounts@gmail.com<br><br>`,
+            keywords: ['fee', 'payment', 'money', 'refund', 'receipt', 'accounts']
+        },
+
+        'exam': {
+            response: `📝 <strong>Examination Related Assistance:</strong><br><br>
+            <strong>Important Information:</strong><br>
+            1. Check academic calendar for exam dates<br>
+            2. Verify your exam registration status<br>
+            3. Review exam guidelines and rules<br><br>
+            <strong>Common Queries:</strong><br>
+            • Exam schedule: Available on college website<br>
+            • Seat numbers: Check notice boards<br>
+            • admit card: takes admit card from respective department<br>
+            • Supplementary exams: Contact exam cell or check whatsapp group<br><br>
+            <strong>Contact Exam Cell:</strong><br>
+            • Office: above library office<br>
+            • Phone: +91 9368521236<br>
+            • Email: exams@gmail.com<br><br>
+            <strong>Results:</strong><br>
+            • Published on: tkiet fee payment<br>
+            • Exam fee: Submit no dues before paying fee `,
+            keywords: ['exam', 'test', 'result', 'grade', 'marks', 'revaluation', 'admit card']
+        },
+
+        'electricity': {
+            response: `⚡ <strong>Electrical Problems & Solutions:</strong><br><br>
+            <strong>Immediate Attention Issues:</strong><br>
+            1. Power outage in your room or block — check with other rooms first.<br>
+            2. Spark, burning smell, or short circuit — <strong>immediately switch off main supply</strong> and inform electrician.<br>
+            3. Broken switchboard or wire — avoid touching directly.<br><br>
+
+            <strong>Common Problems & Actions:</strong><br>
+            • Tube light or bulb not working — report to maintenance staff.<br>
+            • Socket not functioning — avoid overloading plugs.<br>
+            • Fan or switch issue — contact hostel maintenance desk.<br><br>
+
+            <strong>Contact Maintenance:</strong><br>
+            • Electrician: +91 9876541230<br>
+            • Office Hours: 9 AM - 6 PM (Tue-Sun)<br>
+            • Email: maintenance@tkiet.com<br><br>
+            <strong>Safety Note:</strong style="color:red;"> Do not attempt to repair electrical faults yourself!`,
+            keywords: ['electricity', 'power', 'light', 'fan', 'switch', 'socket', 'bulb', 'circuit', 'electric', 'wiring']
+        },
+
+
+        'cleanliness': {
+            response: `🧹 <strong>Cleanliness problems:</strong><br><br>
+            1. complaint the authoririties if not cleaned <br>
+            2. if it is not cleaned more than 1 day then file the compalint `,
+            keywords: ['clean', 'dirt', 'dirty']
+        },
+
+        'broken': {
+            response: `⛓️‍💥 <strong>Broken equipments:</strong><br><br>
+            1. If any stuff is broken contact office clerks to replace it<br>
+            2. if hostel items are broken go to the respective workers<br>
+            <strong>Contact Accounts:</strong><br>
+            • Office hours: 9 AM - 5 PM (Tue-Sun)<br>
+            • Phone: +91 9874563201<br>`,
+            keywords: ['broken', 'equipments']
+        },
+
+        'stolen': {
+            response: `🕵️ <strong>stolen or missing problems:</strong><br><br>
+            <strong>First check :</strong><br>
+            1. Your room<br>
+            2. Contact / ask your friends if they had taken you stuff<br>
+            3. Check neighbour room<br>
+            4. ask workers who are coming for cleaning room <br><br>
+            <strong>If not found then Contact authorities:</strong><br>
+            • Office hours: 9 AM - 5 PM (Mon-Sat)<br>
+            • Phone: +91 9685741425<br>
+            • Email: Hostel@gmail.com    department@gmail.com<br><br>`,
+            keywords: ['miss', 'missing', 'stolen', 'finding', 'thief']
+        },
+
+        'teacher': {
+            response: `🧑‍🏫 <strong>Teacher / Faculty Related Issues:</strong><br><br>
+            <strong>Common Issues & Steps:</strong><br>
+            1. Subject-related doubts — approach the teacher during consultation hours.<br>
+            2. Faculty not available or irregular — inform the department coordinator.<br>
+            3. Unfair evaluation or marks dispute — submit written request to HOD.<br>
+            4. Misbehavior or harassment — report confidentially to complaint portal with <strong>high priority</strong>.<br><br>
+
+            <strong>Contact Information:</strong><br>
+            • Department Office: +91 9865324109<br>
+            • HOD Email: hod@tkiet.com<br>
+            • Grievance Cell: grievance@tkiet.com<br><br>
+
+            <strong>Note:</strong> Always maintain professional communication when reporting faculty issues.`,
+            keywords: ['teacher', 'faculty', 'professor', 'lecturer', 'subject', 'teaching', 'marks', 'attendance', 'class']
+        },
+
+
+        'scholarship': {
+            response: `🎖️ <strong>Scholarship Queries:</strong><br><br>
+            <strong>Information:</strong><br>
+            • Fill the scholarship form on mahadbt portal<br>
+            • After form filling evaluate it from student section<br>
+            • fill form before the 31 march
+            • check the form details and status on mahadbt portal`,
+            keywords: ['scholarship', 'form' , 'mahadbt']
+        },
+
+        'contact': {
+            response: `📞 <strong>Contact information:</strong><br><br>
+            <strong>Hostel Contact:</strong><br>
+            1. staff 1 : 1234561230<br>
+            2. staff 2 : 1234561230<br>
+            3. staff 3 : 1234561230<br>
+            4. staff 4 : 1234561230<br><br>
+            <strong>Department Contact:</strong><br>
+            1. staff 1 : 1234561230<br>
+            2. staff 2 : 1234561230<br>
+            3. staff 3 : 1234561230<br>
+            4. staff 4 : 1234561230<br><br>
+            <strong>Contact Accounts:</strong><br>
+            • Office hours: 9 AM - 5 PM (Mon-Sat)<br>
+            • Email: eresolvetkiet@gmail.com<br><br>
+            <strong style="color:red;">WARNING</strong><br>
+            • Please contact authorities only if it is necessary <br>
+            • if you use these information to harass or tease the authorities strict action will be taken`,
+            keywords: ['number', 'contact', 'phone', 'communicate' , 'communication']
+        },
+
+        'register': {
+            response: `📝 <strong>How to File a Complaint:</strong><br><br>
+            1. Click on "My Complaints" section<br>
+            2. Click "Create New Complaint"<br>
+            3. Choose category (Hostel/Department)<br>
+            4. Select appropriate sub-category<br>
+            5. Fill in all details clearly<br>
+            6. Set priority level<br>
+            7. Submit and get your complaint ID<br><br>
+            <strong>Tips for better resolution:</strong><br>
+            • Be specific about location and time<br>
+            • Include document if relevant<br>
+            • Mention previous attempts to resolve<br>
+            • Use appropriate priority level<br><br>
+            Your complaint will be automatically routed to the right department! `,
+            keywords: ['register', 'file', 'submit', 'add']
+        },
+
+        'transport': {
+            response: `🚌 <strong>Transport / Bus Related Queries:</strong><br><br>
+            <strong>Immediate Issues:</strong><br>
+            1. Bus not arrived on time — contact transport in-charge.<br>
+            2. Bus breakdown — wait at safe location and inform driver or in-charge.<br>
+            3. Lost items on bus — contact transport office.<br><br>
+
+            <strong>Common Queries:</strong><br>
+            • Bus schedule and routes — available on college website or notice board.<br>
+            • Late arrival or route change — confirm with driver or transport office.<br>
+            • Bus pass renewal — visit admin/transport section.<br><br>
+
+            <strong>Contact Information:</strong><br>
+            • Transport Office: +91 9856321470<br>
+            • Email: transport@tkiet.com<br>
+            • Office Hours: 8:00 AM - 6:00 PM (Mon–Sat)<br><br>
+            <strong>Note:</strong> For safety, always wait at designated pickup points only.`,
+            keywords: ['bus', 'transport', 'route', 'pickup', 'driver', 'pass', 'vehicle', 'travel']
+        },
+
+        'medical': {
+            response: `🧑‍⚕️ <strong>Medical / Health Assistance:</strong><br><br>
+            <strong>Emergency Steps:</strong><br>
+            1. Contact the campus medical center immediately.<br>
+            2. For serious conditions (injury, fainting, food poisoning), call ambulance or rector.<br>
+            3. Inform hostel warden or department head if hospitalization is required.<br><br>
+
+            <strong>Health Support:</strong><br>
+            • Medical Room Timings: 9:00 AM - 6:00 PM<br>
+            • Doctor on Duty: +91 9876504321<br>
+            • Ambulance Helpline: 108 (24x7)<br><br>
+
+            <strong>Common Queries:</strong><br>
+            • First aid available in rector office.<br>
+            • For regular check-ups, visit medical center.<br><br>
+
+            <strong>Contact Information:</strong><br>
+            • Email: medical@tkiet.com<br>
+            • Warden Contact (After Hours): +91 9546217530<br><br>
+            <strong>Reminder:</strong> Always carry your student ID when visiting the medical center.`,
+            keywords: ['medical', 'doctor', 'health', 'hospital', 'medicine', 'injury', 'ambulance', 'clinic', 'sick', 'ill']
+        },
+
+        'status': {
+            response: `📊 <strong>How to Track Your Complaint Status:</strong><br><br>
+            1. Visit "My Complaints" section<br>
+            2. Click on any complaint for detailed view<br>
+            4. Look for status badges:  Pending,  In Progress,  Resolved<br><br>
+            <strong>Status Meanings:</strong><br>
+            • <strong>Pending:</strong> Complaint received, waiting for assignment<br>
+            • <strong>In Progress:</strong> Department is actively working on it<br>
+            • <strong>Resolved:</strong> Issue has been fixed<br><br>
+            You'll receive email notifications for all status changes! `,
+            keywords: ['status', 'track', 'progress']
+        }
+    };
+
+    function sendChatMessage() {
+        const input = document.getElementById('chatbot-input');
+        const message = input.value.trim();
+        
+        if (!message) return;
+        
+        const messagesContainer = document.getElementById('chatbot-messages');
+        
+        // Add user message
+        const userMessage = document.createElement('div');
+        userMessage.className = 'message user';
+        userMessage.innerHTML = `<div class="message-content">${message}</div>`;
+        messagesContainer.appendChild(userMessage);
+        
+        // Show typing indicator
+        const typingIndicator = document.createElement('div');
+        typingIndicator.className = 'message bot';
+        typingIndicator.innerHTML = `<div class="message-content">Waiting for Response...</em></div>`;
+        messagesContainer.appendChild(typingIndicator);
+        
+        // Auto-scroll to bottom
+        messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        
+        // Generate response
+        setTimeout(() => {
+            messagesContainer.removeChild(typingIndicator);
+            
+            let botResponse = getBotResponse(message);
+            
+            const botMessage = document.createElement('div');
+            botMessage.className = 'message bot';
+            botMessage.innerHTML = `<div class="message-content">${botResponse}</div>`;
+            messagesContainer.appendChild(botMessage);
+            
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        }, 1000); 
+        
+        input.value = '';
+    }
+
+    function getBotResponse(message) {
+        const lowerMessage = message.toLowerCase();
+        
+        // Check for greetings
+        if (lowerMessage.includes('hello') || lowerMessage.includes('hi') || lowerMessage.includes('hey')) {
+            return ` Hello there! I'm your Chatbot, how can i help you.`;
+        }
+
+        for (const [key, responseData] of Object.entries(chatbotResponses)) {
+            if (responseData.keywords.some(keyword => lowerMessage.includes(keyword))) {
+                return responseData.response;
+            }
+        }
+        
+        // Default response for unrecognized queries
+        return `🤖 -> I understand you're facing an issue. While I may not have a specific solution for "${message}", file the complaints or contact the authorities :<br><br>
+            <strong>Contacts:</strong><br>
+            • Hostel emergencies: +91 98765-43210<br>
+            • Department emergencies: +91 98765-43222<br>
+            • Police:  911<br>
+            • Medical emergency:  108<br><br>
+
+            Is there anything else I can help you with? 
+        `;
+    }
+    document.getElementById('chatbot-input').addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            document.getElementById('send-chat-to-chatbot').click();
+        }
+    });
+
+
+    window.editComplaint = editComplaint;
+    window.closeModal = closeModal;
+    window.submitComplaint = submitComplaint;
+    window.showSection = showSection;
+    window.logout = logout;
+    window.submitFeedback = submitFeedback;
+    window.deleteFeedback = deleteFeedback;
+    window.filterComplaints = filterComplaints;
+    window.filterMyComplaints = filterMyComplaints;
+    window.searchComplaints = searchComplaints;
+    window.sendChatMessage = sendChatMessage;
+    window.createComplaintCard = createComplaintCard;
+    window.showComplaintForm = showComplaintForm;
+    window.setupCategoryChange = setupCategoryChange;
+    window.toBase64 = toBase64;
+    window.updateStats = updateStats;
+    window.loadUserData = loadUserData;
+    window.checkLogin = checkLogin;
+    window.saveComplaintToFirestore = saveComplaintToFirestore;
+    // window.updateComplaintInFirestore = updateComplaintInFirestore;
+
+</script>
+
+</body>
+</html>
+
+
+
+<!-- remaining -->
+    <!-- firestore -->
