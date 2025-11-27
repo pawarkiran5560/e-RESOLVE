@@ -664,7 +664,7 @@
                         <strong style="font-weight:25px;">Complaint Response:</strong><br>
                         <p class="student-feedback" style="margin:0 0 0 50px;">${complaint.response}</p>
                          ${complaint.responseDate ? `<br><small><strong>Response Date:</strong> ${complaint.responseDate}</small>` : ''}<br>
-                        <button class="btn btn-cancel"  onclick="deleteResponse('${complaint.id}')">Delete Feedback</button>
+                        <button class="btn btn-cancel"  onclick="deleteResponse('${complaint.id}')">Delete Response</button>
                     </div>
                 ` : `${complaint.status === 'resolved' && !complaint.response ? `
                     <button class="btn btn-success"  onclick="document.getElementById('response-form-${complaint.id}').style.display = 'block';">
