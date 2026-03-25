@@ -11,14 +11,15 @@
         <img id="tkiet_banner_id" src="tkiet_banner.jpg" alt="tkiet banner">
     </div>
     <img id="tkiet_building_id" src="tkiet_building.webp" alt="tkiet building">
-    <div class="dashboard">
+
+    <div class="dashboard" id="dashboard_id">
         <div class="user_info">
                 <div class="user_icon" id="user-avatar">K</div>
-                <div class="name-fitting">
+                <div class="name-fitting" style="width: 5vw;">
                     <div id="welcome-text"  style="font-weight: 600; flex: 1; min-width: 0; overflow: auto; white-space: nowrap;" class="name-fitting">Welcome, Student!</div>
                     <div style="font-size: 20px; " id="user-id">STU001</div>
                 </div>
-            </div>
+        </div>
         <div class="dashboard-nav">
             <button class="nav-btn active" onclick="showSection('view-complaints')">
                 📋 All Complaints
@@ -35,6 +36,21 @@
             <button class="nav-btn" onclick="logout()" style="position: absolute; bottom: 3%;">
                 🔚 Logout
             </button>
+        </div>
+    </div>
+
+    <div class="tab-dashboard">
+        <div class="user_info"  id="tab-user-info">
+                <div style="display: flex;">
+                    <div class="user_icon" id="tab-user-avatar">K</div>
+                    <div class="name-fitting">
+                        <div id="tab-welcome-text"  style="font-weight: 600; flex: 1; min-width: 0; overflow: auto; white-space: nowrap;" class="name-fitting">Welcome, Student!</div>
+                        <div style="font-size: 20px; " id="tab-user-id">STU001</div>
+                    </div>
+                </div>
+        </div>
+        <div style="font-size: 25px;">
+            <img src="menu.webp" alt="menu" class="menu-image" onclick="tab_show_dashboard()">
         </div>
     </div>
 
@@ -115,7 +131,123 @@
                 
                 <div id="my-complaints-list"></div>
 
-                
+                <!-- <div class="complaint-card">
+                    <div class="complaint-header" style="display: flex;">
+                        <div class="complaint-id complaint-header-medium">
+                               🕵️ FACULTY ISSUES  <br>
+                               <span style="font-size: 15px;">🏢 COM0011</span>s
+                        </div>
+                        <div style="position:absolute ; right: 30px;">
+                            <span class="status-badge status-pending">
+                                pending ⏳ 
+                                progress🔄
+                                resolved ✅
+                            </span>
+                            <span class="priority-badge priority-medium">
+                                high🔴
+                                medium🔵
+                                low🟢
+                            </span>
+                        </div>
+                    </div>
+                    <div class="complaint-content">
+                        <h2>faculty is not teaching well</h2>
+                        <p>these particular subject teacher is not teaching well</p>
+                        <p><strong>📍 Location:</strong> CRCS01</p>
+                        
+                    </div>
+                    <div class="complaint-meta">
+                        <span><strong>Category:</strong> hostel</span>
+                        <span><strong>Submitted:</strong> 2025-1-12</span>
+                        <span><strong>Student:</strong> STU001</span>
+                    </div>
+                </div> -->
+
+                <!-- <div class="complaint-card high-priority ">
+                    <div class="complaint-header" style="display: flex;">
+                        <div class="complaint-id complaint-header-high">
+                               🕵️ FACULTY ISSUES  <br>
+                               <span style="font-size: 15px;">🏢 COM0011</span>
+                        </div>
+                        <div style="position:absolute ; right: 30px;">
+                            <span class="status-badge status-progress">
+                                pending ⏳ 
+                                progress🔄
+                                resolved ✅
+                            </span>
+                            <span class="priority-badge priority-high">
+                                high🔴
+                                medium🔵
+                                low🟢
+                            </span>
+                        </div>
+                    </div>
+                    <div class="complaint-content">
+                        <h2>faculty is not teaching well</h2>
+                        <p>these particular subject teacher is not teaching well</p>
+                        <p><strong>📍 Location:</strong> CRCS01</p>
+                        
+                        
+                    </div>
+                    <div class="complaint-meta">
+                        <span><strong>Category:</strong> hostel</span>
+                        <span><strong>Submitted:</strong> 2025-1-12</span>
+                        <span><strong>Student:</strong> STU001</span>
+                    </div>
+                </div> -->
+
+                <!-- <div class="complaint-card resolved">
+                    <div class="complaint-header" style="display: flex;">
+                        <div class="complaint-id complaint-header-low">
+                               🕵️ FACULTY ISSUES  <br>
+                               <span style="font-size: 15px;">🏢 COM0011</span>
+                        </div>
+                        <div style="position:absolute ; right: 30px;">
+                            <span class="status-badge status-resolved">
+                                pending ⏳ 
+                                progress🔄
+                                resolved ✅
+                            </span>
+                            <span class="priority-badge priority-low">
+                                high🔴
+                                medium🟡
+                                low🟢
+                            </span>
+                        </div>
+                    </div>
+                    <div class="complaint-content">
+                        <h2>faculty is not teaching well</h2>
+                        <p>these particular subject teacher is not teaching well sgdsagasdkjfbkajdsbfkjNDSfa askdfhnkasld fasdhfashdfoas dfoasdfo aos dfas dfoahsdf asdfas dfioahsdf asdfj oasdf oashdf a sdfsj asdf asdjg oasodg ashg asfjg oasogjo</p>
+                        <p><strong>📍 Location:</strong> CRCS01</p>
+                        
+                            <div class="response-section complaint-card resolved">
+                                <strong>🔧 Department Response:</strong><br>
+                                <p>we will take action </p>
+                                <small><strong>Response Date:</strong> 2024-02-14</small>
+                            </div>
+                            <div class="feedback-section complaint-card resolved">
+                                <strong>📝 Your Feedback:</strong><br>
+                                <button class="btn btn-success"  style="position: absolute; right: 30px; top: 20px;">Give Feedback</button>
+                                <p class="student-feedback">feedback will come here</p>
+                                <div class="feedback-form" style="display: none;">
+                                    <h5>💭 Please provide your feedback</h5>
+                                    <textarea id="feedback-${complaint.id}" placeholder="How satisfied are you with the resolution of the complaint? Your feedback helps us improve our services..." rows="3" style="width: 100%; padding: 12px; border: 2px solid #dee2e6; border-radius: 8px; resize: vertical; margin-bottom: 10px;"></textarea>
+                                    <button class="btn btn-success" onclick="submitFeedback('${complaint.id}')">
+                                        📤 Submit Feedback
+                                    </button>
+                                </div>
+                            </div>
+                           
+                        
+                    </div>
+                    <div class="complaint-meta">
+                        <span><strong>Category:</strong> hostel</span>
+                        <span><strong>Submitted:</strong> 2025-1-12</span>
+                        <span><strong>Student:</strong> STU001</span>
+                    </div>
+                    
+                </div>  -->
+
             </div>
 
             <!-- My Profile -->
@@ -207,23 +339,23 @@
                             <div class="message-content">
                                 👋 Hello! I'm your Chatbot. How can I help you with :
                                 <br>
-                                <br>💧 <strong>Water supply problems</strong>
-                                <br>🍽️ <strong>Mess/food complaints</strong>
-                                <br>📚 <strong>Library services</strong>
-                                <br>💰 <strong>Fee-related queries</strong>
-                                <br>📝 <strong>Exam information</strong>
-                                <br>⚡ <strong>Electrical problems</strong>
-                                <br>🧹 <strong>Cleanliness issues</strong>
-                                <br>⛓️‍💥 <strong>Broken Equipment</strong>
-                                <br>🕵️ <strong>Stolen / Missing items</strong>
-                                <br>🧑‍🏫 <strong>Teaching / Teacher related issues</strong>
-                                <br>🎖️ <strong>Scholarship queries</strong>
-                                <br>📝 <strong>Register a complaint</strong>
-                                <br>⌛ <strong>Complaint status</strong>
-                                <br>🚌 <strong>Transport Issue</strong>
-                                <br>🧑‍⚕️ <strong>Medical Assistance</strong>
-                                <br>🚨 <strong>Ragging / Safety Complaints</strong>
-                                <br>📞 <strong>Need contact Information</strong>
+                                <br>🔹 <strong>Water supply problems</strong>
+                                <br>🔸 <strong>Mess/food complaints</strong>
+                                <br>🔹 <strong>Library services</strong>
+                                <br>🔸 <strong>Fee-related queries</strong>
+                                <br>🔹 <strong>Exam information</strong>
+                                <br>🔸 <strong>Electrical problems</strong>
+                                <br>🔹 <strong>Cleanliness issues</strong>
+                                <br>🔸 <strong>Broken Equipment</strong>
+                                <br>🔹 <strong>Stolen / Missing items</strong>
+                                <br>🔸 <strong>Teaching / Teacher related issues</strong>
+                                <br>🔹 <strong>Scholarship queries</strong>
+                                <br>🔸 <strong>Register a complaint</strong>
+                                <br>🔹 <strong>Complaint status</strong>
+                                <br>🔸 <strong>Transport Issue</strong>
+                                <br>🔹 <strong>Medical Assistance</strong>
+                                <br>🔸 <strong>Ragging / Safety Complaints</strong>
+                                <br>🔹 <strong>Need contact Information</strong>
                                 <br><br>
                                 Just describe your problem and I'll provide instant solutions! 
                             </div>
@@ -446,6 +578,10 @@
         document.getElementById('welcome-text').textContent = `Welcome, ${currentUser.name.split(" ")[0]} !`;
         document.getElementById('user-id').textContent = currentUser.id;
         document.getElementById('user-avatar').textContent = currentUser.name.charAt(0).toUpperCase();
+
+        document.getElementById('tab-welcome-text').textContent = `Welcome, ${currentUser.name.split(" ")[0]} !`;
+        document.getElementById('tab-user-id').textContent = currentUser.id;
+        document.getElementById('tab-user-avatar').textContent = currentUser.name.charAt(0).toUpperCase();
     }
 
     function loadUserData() {
@@ -828,44 +964,50 @@
                     ${subcategoryLabels[complaint.subcategory] || complaint.subcategory}  <br>
                     <span style="font-size: 15px;">${complaint.id}</span>
                 </div>
-                <div  style="position:absolute ; right: 310px;">
-                    <!-- <span>${complaint.proof && complaint.proof.length > 0 ? `<span><img src="download3.png" ><span  style="font-weight:bolder;"> PDF</span></span>` : ''}</span> -->
-                    
-                    <span>
-                        ${complaint.proof ? `
-                            ${complaint.hide === 'no' ?`
-                                <a href="${complaint.proof}" download="complaint-${complaint.id}.pdf" style="text-decoration:none; color:black;">
+                <div class="status_priority">
+                    <div  style="position:relative ; right: 0vw;" class="mobile_status_priority">
+                        <!-- <span>${complaint.proof && complaint.proof.length > 0 ? `<span><img src="download3.png" ><span  style="font-weight:bolder;"> PDF</span></span>` : ''}</span> -->
+                        
+                        <span class="mobile-pdf">
+                            ${complaint.proof ? `
+                                ${complaint.hide === 'no' ?`
+                                    <a href="${complaint.proof}" download="complaint-${complaint.id}.pdf" style="text-decoration:none; color:black;">
+                                        <span>
+                                            <img src="download3.png" style="width:20px; vertical-align:middle;">
+                                            <span style="font-weight:bolder; cursor:pointer;"> PDF</span>
+                                        </span>
+                                    </a>
+                                `:`
                                     <span>
                                         <img src="download3.png" style="width:20px; vertical-align:middle;">
                                         <span style="font-weight:bolder; cursor:pointer;"> PDF</span>
                                     </span>
-                                </a>
-                            `:`
-                                <span>
-                                    <img src="download3.png" style="width:20px; vertical-align:middle;">
-                                    <span style="font-weight:bolder; cursor:pointer;"> PDF</span>
-                                </span>
-                            `} 
-                            
+                                `} 
+                                
+                            ` : ''}
+                        </span>
+                    
+                        <span class="status-badge status-${complaint.status}">
+                            ${complaint.status === 'pending' ? '⏳' : complaint.status === 'progress' ? '🔄' : '✅'} 
+                            ${complaint.status.toUpperCase()}
+                        </span>
+                        <span class="priority-badge priority-${complaint.priority}">
+                            ${complaint.priority === 'high' ? '🔴' : complaint.priority === 'medium' ? '🔵' : '🟢'} 
+                            ${complaint.priority.toUpperCase()}
+                        </span>
+                        ${complaint.status === 'pending' &&  complaint.studentId === currentUser.id? `
+                            <button class="btn btn-success edit-btn mobile-edit-btn"  onclick="editComplaint('${complaint.id}')" > Edit Complaint </button>
                         ` : ''}
-                    </span>
+                    </div>
+                    
                 </div>
-                <div  style="position:absolute ; right: 30px;">
-                    <span class="status-badge status-${complaint.status}">
-                        ${complaint.status === 'pending' ? '⏳' : complaint.status === 'progress' ? '🔄' : '✅'} 
-                        ${complaint.status.toUpperCase()}
-                    </span>
-                    <span class="priority-badge priority-${complaint.priority}">
-                        ${complaint.priority === 'high' ? '🔴' : complaint.priority === 'medium' ? '🔵' : '🟢'} 
-                        ${complaint.priority.toUpperCase()}
-                    </span>
+
+                <div class="mobile_actions" onclick="show_actions(this)" >
+                    ⬅️Actions    
                 </div>
+                
             </div>
-            ${complaint.status === 'pending' &&  complaint.studentId === currentUser.id? `
-                <div style=" position: absolute; right: 20px; top: 80px;">
-                    <button class="btn btn-success"  onclick="editComplaint('${complaint.id}')" > Edit Complaint </button>
-                </div>
-            ` : ''}
+            
             
             <div class="complaint-content">
                 <h2>${complaint.subject}</h2>
@@ -882,7 +1024,7 @@
             ` : ''}
             ${complaint.feedback ? `
                 <div class="feedback-section complaint-card  ${complaint.priority === 'high' ? 'high-priority' : ''} ${complaint.priority === 'low' ? 'resolved' : ''}">
-                    <strong>✏️ ${complaint.hide === 'no' ? `${complaint.studentName.toUpperCase()} (${complaint.studentId})` : 'Anonymous'} Feedback:</strong><br>
+                    <strong> ${complaint.hide === 'no' ? `${complaint.studentName.toUpperCase()} (${complaint.studentId})` : 'Anonymous'} Feedback:</strong><br>
                     <p class="student-feedback">${complaint.feedback}</p>
                     <button class="btn btn-cancel"  onclick="deleteFeedback('${complaint.id}')">Delete Feedback</button>
 
@@ -904,7 +1046,7 @@
                                 style="width: 100%; padding: 12px; border: 2px solid ; border-radius: 8px; resize: vertical; margin-bottom: 10px; font-size:18px;"
                             ></textarea>
                             <button class="btn btn-success" onclick="submitFeedback('${complaint.id}')">
-                                ✅ Submit Feedback
+                                 Submit Feedback
                             </button>
                         </div>
                     ` : ''}
@@ -1613,6 +1755,42 @@
         }
     });
 
+    function tab_show_dashboard() {
+        const dashboard = document.getElementById('dashboard_id');
+        
+        if (dashboard.style.display === "block") {
+            dashboard.style.display = "none";
+                document.getElementById('tab-user-info').style.display="block";
+        } else {
+            dashboard.style.display = "block";
+                document.getElementById('tab-user-info').style.display="none";
+        }
+    }
+
+    document.addEventListener("click", function(event) {
+        const dashboard = document.getElementById("dashboard_id");
+        const menuBtn = document.querySelector(".menu-image");
+
+        if (
+            dashboard.style.display === "block" &&
+            !dashboard.contains(event.target) &&
+            !menuBtn.contains(event.target)
+        ) {
+            dashboard.style.display = "none";
+                document.getElementById('tab-user-info').style.display="block";
+        }
+    });
+
+    function show_actions(btn){
+        const parent = btn.parentElement;
+
+        const actions = parent.querySelector('.status_priority');
+        const mobileBtn = parent.querySelector('.mobile_actions');
+
+        actions.classList.toggle("show");
+        mobileBtn.classList.toggle("hide");
+    }
+
 
     window.editComplaint = editComplaint;
     window.closeModal = closeModal;
@@ -1634,6 +1812,8 @@
     window.checkLogin = checkLogin;
     window.saveComplaintToFirestore = saveComplaintToFirestore;
     // window.updateComplaintInFirestore = updateComplaintInFirestore;
+    window.tab_show_dashboard = tab_show_dashboard;
+    window.show_actions = show_actions;
 
 </script>
 
