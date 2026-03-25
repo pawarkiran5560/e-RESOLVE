@@ -11,9 +11,9 @@
         <img id="tkiet_banner_id" src="tkiet_banner.jpg" alt="tkiet banner">
     </div>
     <img id="tkiet_building_id" src="tkiet_building.webp" alt="tkiet building">
-    <div class="dashboard">
-        <div class="user_info">
-                <div class="user_icon" id="hostel-user-avatar">K</div>
+    <div class="dashboard" id="dashboard_id">
+        <div class="user_info" style="flex-wrap: nowrap;">
+                <div class="user_icon" id="hostel-user-avatar" style="padding: 10px;">K</div>
                 <div  class="name-fitting">
                     <div id="hostel-welcome-text" style="font-weight: 600; flex: 1; min-width: 0; overflow: auto; white-space: nowrap;" class="name-fitting">Welcome, Staff!</div>
                     <div style="font-size: 20px; " id="hostel-user-id">hostel001</div>
@@ -32,6 +32,21 @@
             <button class="nav-btn" onclick="logout()" style="position: absolute; bottom: 3%;">
                 🔚 Logout
             </button>
+        </div>
+    </div>
+
+    <div class="tab-dashboard">
+        <div class="user_info" id="tab-user-info">
+                <div style="display: flex;">
+                    <div class="user_icon" id="tab-user-avatar">K</div>
+                    <div class="name-fitting">
+                        <div id="tab-welcome-text"  style="font-weight: 600; flex: 1; min-width: 0; overflow: auto; white-space: nowrap;" class="name-fitting">Welcome, Staff!</div>
+                        <div style="font-size: 20px; " id="tab-user-id">DEPT001</div>
+                    </div>
+                </div>
+        </div>
+        <div style="font-size: 25px;">
+            <img src="menu.webp" alt="menu" class="menu-image" onclick="tab_show_dashboard()">
         </div>
     </div>
 
@@ -144,6 +159,10 @@
             document.getElementById('hostel-welcome-text').textContent = `Welcome, ${currentUser.name}!`;
             document.getElementById('hostel-user-id').textContent = currentUser.id;
             document.getElementById('hostel-user-avatar').textContent = currentUser.name.charAt(0).toUpperCase();
+
+            document.getElementById('tab-welcome-text').textContent = `Welcome, ${currentUser.name} !`;
+            document.getElementById('tab-user-id').textContent = currentUser.id;
+            document.getElementById('tab-user-avatar').textContent = currentUser.name.charAt(0).toUpperCase();
         }
 
 
@@ -354,43 +373,52 @@
 
 
                     <div style="position:absolute ; right: 30px;">
-                        <span style="margin:0 10px 0 0;">
-                            ${complaint.proof ? `
-                                    <a href="${complaint.proof}" download="complaint-${complaint.id}.pdf" style="text-decoration:none; color:black;">
-                                        <span>
-                                            <img src="download3.png" style="width:20px; vertical-align:middle;">
-                                            <span style="font-weight:bolder; cursor:pointer;"> PDF</span>
-                                        </span>
-                                    </a>
-                            `:``}  
-                        </span>
                         
-                        <span class="status-badge status-${complaint.status}" id="status-badge-hide-${complaint.id}" onclick="openStatusMenu('${complaint.id}')">
-                            ${complaint.status === 'pending' ? '⏳' : complaint.status === 'progress' ? '🔄' : '✅'} 
-                            ${complaint.status.toUpperCase()}
-                        </span>
+                        <div class="status_priority">
 
-                        <select class="status-badge status-${complaint.status}" id="status-select-${complaint.id}" style="display:none; margin-left:10px;"   onchange="updateStatus('${complaint.id}')">
-                            <option value="pending" ${complaint.status === 'pending' ? 'selected' : ''}>⏳ Pending</option>
-                            <option value="progress" ${complaint.status === 'progress' ? 'selected' : ''}>🔄 In Progress</option>
-                            <option value="resolved" ${complaint.status === 'resolved' ? 'selected' : ''}>✅ Resolved</option>
-                        </select>
+                            <span style="margin:0 10px 0 0;">
+                                ${complaint.proof ? `
+                                        <a href="${complaint.proof}" download="complaint-${complaint.id}.pdf" style="text-decoration:none; color:black;">
+                                            <span>
+                                                <img src="download3.png" style="width:20px; vertical-align:middle;">
+                                                <span style="font-weight:bolder; cursor:pointer;"> PDF</span>
+                                            </span>
+                                        </a>
+                                `:``}  
+                            </span>
 
-                        <span class="priority-badge priority-${complaint.priority}" id="priority-badge-hide-${complaint.id}" onclick="openPriorityMenu('${complaint.id}')">
-                            ${complaint.priority === 'high' ? '🔴' : complaint.priority === 'medium' ? '🔵' : '🟢'} 
-                            ${complaint.priority.toUpperCase()}
-                        </span>
+                            <span class="status-badge status-${complaint.status}" id="status-badge-hide-${complaint.id}" onclick="openStatusMenu('${complaint.id}')">
+                                ${complaint.status === 'pending' ? '⏳' : complaint.status === 'progress' ? '🔄' : '✅'} 
+                                ${complaint.status.toUpperCase()}
+                            </span>
 
-                        <select class="priority-badge priority-${complaint.priority}" id="priority-select-${complaint.id}" style="display:none; margin-left:10px;"   onchange="updatePriority('${complaint.id}')">
-                            <option value="low" ${complaint.priority === 'low' ? 'selected' : ''}>🟢 Low</option>
-                            <option value="medium" ${complaint.priority === 'medium' ? 'selected' : ''}>🔵 Medium</option>
-                            <option value="high" ${complaint.priority === 'high' ? 'selected' : ''}>🔴 High</option>
-                        </select>
+                            <select class="status-badge status-${complaint.status}" id="status-select-${complaint.id}" style="display:none; margin-left:10px;"   onchange="updateStatus('${complaint.id}')">
+                                <option value="pending" ${complaint.status === 'pending' ? 'selected' : ''}>⏳ Pending</option>
+                                <option value="progress" ${complaint.status === 'progress' ? 'selected' : ''}>🔄 In Progress</option>
+                                <option value="resolved" ${complaint.status === 'resolved' ? 'selected' : ''}>✅ Resolved</option>
+                            </select>
 
-                        <!-- Restrict student -->
-                        <button class="btn priority-${complaint.priority}"" style="margin-left:10px; padding:7px;" onclick="openRestrictMenu('${complaint.id}', '${complaint.studentId}')">
-                            ❌ Restrict Student
-                        </button>
+                            <span class="priority-badge priority-${complaint.priority}" id="priority-badge-hide-${complaint.id}" onclick="openPriorityMenu('${complaint.id}')">
+                                ${complaint.priority === 'high' ? '🔴' : complaint.priority === 'medium' ? '🔵' : '🟢'} 
+                                ${complaint.priority.toUpperCase()}
+                            </span>
+
+                            <select class="priority-badge priority-${complaint.priority}" id="priority-select-${complaint.id}" style="display:none; margin-left:10px;"   onchange="updatePriority('${complaint.id}')">
+                                <option value="low" ${complaint.priority === 'low' ? 'selected' : ''}>🟢 Low</option>
+                                <option value="medium" ${complaint.priority === 'medium' ? 'selected' : ''}>🔵 Medium</option>
+                                <option value="high" ${complaint.priority === 'high' ? 'selected' : ''}>🔴 High</option>
+                            </select>
+
+                            <!-- Restrict student -->
+                            <button class="btn priority-${complaint.priority}"" style="margin-left:10px; padding:7px;" onclick="openRestrictMenu('${complaint.id}', '${complaint.studentId}')">
+                                ❌ Restrict Student
+                            </button>
+                        </div>
+
+                        <div class="mobile_actions" onclick="show_actions(this)" >
+                            ⬅️Actions    
+                        </div>
+
                     </div>
 
                 </div>
@@ -411,7 +439,7 @@
                         <strong style="font-weight:25px;">Complaint Response:</strong><br>
                         <p class="student-feedback" style="margin:0 0 0 50px;">${complaint.response}</p>
                          ${complaint.responseDate ? `<br><small><strong>Response Date:</strong> ${complaint.responseDate}</small>` : ''}<br>
-                        <button class="btn btn-cancel"  onclick="deleteResponse('${complaint.id}')">Delete Response</button>
+                        <button class="btn btn-cancel"  onclick="deleteResponse('${complaint.id}')">Delete Feedback</button>
                     </div>
                 ` : `${complaint.status === 'resolved' && !complaint.response ? `
                     <button class="btn btn-success"  onclick="document.getElementById('response-form-${complaint.id}').style.display = 'block';">
@@ -842,6 +870,42 @@
                 containers3.appendChild(createComplaintCard(complaint, false));
             });
         }
+
+         function tab_show_dashboard() {
+            const dashboard = document.getElementById('dashboard_id');
+            
+            if (dashboard.style.display === "block") {
+                dashboard.style.display = "none";
+                document.getElementById('tab-user-info').style.display="block";
+            } else {
+                dashboard.style.display = "block";
+                document.getElementById('tab-user-info').style.display="none";
+            }
+        }
+
+        document.addEventListener("click", function(event) {
+            const dashboard = document.getElementById("dashboard_id");
+            const menuBtn = document.querySelector(".menu-image");
+
+            if (
+                dashboard.style.display === "block" &&
+                !dashboard.contains(event.target) &&
+                !menuBtn.contains(event.target)
+            ) {
+                dashboard.style.display = "none";
+                document.getElementById('tab-user-info').style.display="block";
+            }
+        });
+
+        function show_actions(btn){
+            const parent = btn.parentElement;
+
+            const actions = parent.querySelector('.status_priority');
+            const mobileBtn = parent.querySelector('.mobile_actions');
+
+            actions.classList.toggle("show");
+            mobileBtn.classList.toggle("hide");
+        }
         
         window.showSection = showSection;
         window.logout = logout;
@@ -868,6 +932,8 @@
         window.searchComplaints1 = searchComplaints1;
         window.searchComplaints2 = searchComplaints2;
         window.searchComplaints3 = searchComplaints3;
+        window.tab_show_dashboard = tab_show_dashboard;
+        window.show_actions = show_actions;
 
             
 
