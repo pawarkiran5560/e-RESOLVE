@@ -68,7 +68,7 @@
       padding: 50px 40px;
       box-shadow: 0 25px 50px rgba(0,0,0,0.2);
       width: 30vw;
-      height: 60vh;
+      height: 70vh;
       position: relative;
       top: -520px;
       left: 35%;
@@ -207,6 +207,104 @@
       cursor: not-allowed;
     }
 
+    /* tablet */
+        @media (max-width:1025px){
+
+            body{
+                font-size: 16px;
+            }
+            
+            #tkiet_banner_id{
+                height: 15vh;
+            }
+
+            #tkiet_building_id{
+                height:85vh;
+                position: absolute;
+            }
+
+            .login-container{
+                width:50vw;
+                height: 40%;
+                left:25%;
+                top:19vh;
+            }
+
+            .btn-send-otp{
+                width:120px;
+                margin:20px 0 0 auto;
+                display:block;
+            }
+
+            .error-message,
+            .success-message{
+                width:50vw;
+                height: 5%;
+                top: 25%;
+                left:25%;
+            }
+
+            .back-btn{
+                top: 19%;
+            }
+
+        
+        }
+
+    /* mobile */
+        @media (max-width:600px){
+
+            body{
+                font-size: 14px;
+            }
+
+            #tkiet_banner_id{
+                height: 13vh;
+            }
+
+            #tkiet_building_id{
+                height:87vh;
+                position: absolute;
+            }
+
+            .login-container{
+                width:80%;
+                left:10%;
+                top:17vh;
+                padding:30px;
+            }
+
+            .login-header h2{
+                font-size:1.5rem;
+            }
+
+            .login-header .icon{
+                font-size:3rem;
+            }
+
+            .btn-send-otp{
+                width:120px;
+                margin:10px 0 0 auto;
+                display:block;
+            }
+
+            .error-message,
+            .success-message{
+                width:80%;
+                left:10%;
+                top: 22%;
+                font-size:0.9rem;
+            }
+
+            .back-btn{
+                top:17%;
+                left:10px;
+                padding:8px 15px;
+                font-size: 0.9rem;
+            }
+
+
+        }
     
 </style>
 </head>
@@ -220,7 +318,7 @@
 
 	<img id='tkiet_building_id' src='tkiet_building.webp' alt='tkiet building'>
 
-	<div class='login-container' style='height: 70vh;'>
+	<div class='login-container' >
 		<div class='login-header' style='margin: -30px 0 0 0;'>
 			<span class='icon' id='login-icon'>🎓</span>
 			<h2 id='login-title'>Login</h2>
