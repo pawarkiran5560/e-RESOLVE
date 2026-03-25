@@ -42,6 +42,11 @@ body::-webkit-scrollbar{
     z-index: 2;
     background-color: rgba(255, 247, 247, 0.5);
 }
+
+.tab-dashboard {
+    display: none;
+}
+
 .right-content{
     width: 79vw;
     height: 79vh;
@@ -462,4 +467,398 @@ table:hover thead{
     flex-wrap: wrap;
     gap: 15px;
     font-weight: 500;
+}
+
+.mobile_actions{
+    display: none;
+}
+
+
+
+/* tablet */
+@media (max-width:1025px){
+
+    body{
+        font-size: 16px;
+    }
+
+    #tkiet_banner_id{
+        height: 15vh;
+    }
+
+    #tkiet_building_id{
+        height:85vh;
+        position: absolute;
+    }
+
+    .dashboard{
+        display: none;
+        width: 35vw;
+        z-index: 4;
+        background-color: rgba(146, 146, 146, 0.7);
+        position: absolute;
+        top: 15%;
+        height: 85vh;
+    }
+
+    .right-content{
+        /* display: none; */
+        width: 95vw;
+        height: 79vh;
+        margin: 1vw 0 0 -18vw;
+    }
+
+    .tab-dashboard{
+        width: 100vw;
+        height: 5vh;
+        position: absolute;
+        top: 15%;
+        z-index: 2;
+        background-color: rgba(255, 247, 247, 0.5);
+        display: flex;
+    }
+
+    /* #tab-user-info{
+        flex-wrap: nowrap;
+    } */
+
+    .name-fitting{
+        width: 50vw;
+        margin-top: 5px;
+    }
+
+    .menu-image{
+        height:3.5vh;
+        width: 5vw;
+        margin: 1vw 2vw 0 1vw;
+        position: absolute;
+        right: 10px;
+    }
+
+    .modal-content{
+        width: 85vw;
+    }
+
+    
+    .nav-btn{
+        width: 30vw;
+    }
+
+
+
+
+}
+
+/* mobile */
+@media (max-width:600px){
+
+    body{
+        font-size: 14px;
+    }
+
+     #tkiet_banner_id{
+        height: 13vh;
+    }
+
+    #tkiet_building_id{
+        height:87vh;
+        position: absolute;
+    }
+
+    .dashboard{
+        width: 70vw;
+        height: 87vh;
+        top: 13%;
+    }
+
+    .nav-btn{
+        width: 55vw;
+    }
+
+    .tab-dashboard{
+        top: 13%;
+    }
+
+    .right-content{
+        width: 100%;
+        /* height: 85vh; */
+        top: 18%;
+        left: 17.5%;
+    }
+
+    .name-fitting{
+        margin-top: 0px;
+    }
+
+    .user_icon{
+        height: 30px;
+        width: 30px;
+        margin: 5px;
+        font-size: 20px;
+    }
+
+    #tab-user-id{
+        font-size: 16px;
+    }
+    #dept-user-id{
+        font-size: 16px;
+    }
+
+    /* .filters select{
+        width: 20vw;
+        padding: 10px;
+        border-radius: 10px;
+        margin: 0 0 20px -20px;
+    }
+    .filters select , .filters input{
+        min-width: 100px;
+    }
+    #dept-new-complaints-search-input{
+        width: 44vw;
+        margin: 0 -40px 20px -10px;
+        padding: 10px 5px;
+    } */
+     /* Fix layout shifting */
+    .right-content{
+        left: 0 !important;
+        margin: 0 !important;
+        padding: 10px;
+    }
+
+    /* Section padding reduce */
+    .dashboard-section{
+        padding: 15px;
+    }
+
+    /* Titles responsive */
+    .section-title{
+        font-size: 1.4rem;
+        gap: 8px;
+    }
+
+    /* Filters stack properly */
+    .filters{
+        flex-direction: column;
+        align-items: stretch;
+        gap: 10px;
+        padding: 10px;
+    }
+
+    .filters select,
+    .filters input{
+        width: 100% !important;
+        min-width: unset;
+        font-size: 0.9rem;
+        padding: 10px;
+    }
+
+    /* Buttons */
+    .btn{
+        width: 100%;
+        justify-content: center;
+        font-size: 0.9rem;
+        padding: 12px;
+    }
+
+    /* Complaint cards */
+    .complaint-card{
+        padding: 15px;
+    }
+
+    .complaint-header{
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+    }
+
+    .complaint-content{
+        font-size: 1rem;
+    }
+
+    .complaint-content p{
+        font-size: 0.85rem;
+    }
+
+    .complaint-meta{
+        flex-direction: column;
+        gap: 5px;
+        font-size: 0.75rem;
+    }
+
+    /* Table scroll fix */
+    .dept-student-data{
+        overflow-x: auto;
+    }
+
+    table{
+        width: 200% !important;
+    }
+
+    th{
+        font-size: 0.8rem;
+        padding: 8px;
+    }
+
+    td{
+        font-size: 0.75rem;
+        padding: 8px;
+    }
+
+    /* Update button */
+    .update-btn{
+        width: 100%;
+        height: auto;
+        font-size: 0.8rem;
+        padding: 8px;
+    }
+
+    /* Modal fix */
+    .modal-content{
+        padding: 20px;
+        width: 95vw;
+        max-height: 90vh;
+    }
+
+    /* Form inputs */
+    .form-group input,
+    .form-group select{
+        font-size: 0.9rem;
+        padding: 10px;
+    }
+
+    /* Fix Add Student button position */
+    #dept-add-student-button{
+        position: static !important;
+        width: 100%;
+        margin-bottom: 10px;
+    }
+
+    /* Fix tab dashboard spacing */
+    .tab-dashboard{
+        padding: 5px 10px;
+        align-items: center;
+    }
+
+    .menu-image{
+        height:3.5vh;
+        width: 5vw;
+        margin: -4vw 2vw 0 1vw;
+        position: absolute;
+        right: 10px;
+    }
+
+        /* Status + Priority badges wrap properly */
+    .status-badge,
+    .priority-badge{
+        width: 25vw;
+        font-size: 0.7rem;
+        padding: 3px 5px;
+        margin: 3px 3px 0 0;
+        display: inline-block;
+        position: relative;
+        right: -55px;
+    }
+
+    .restrict_btn{
+        width: 36vw;
+    }
+
+    /* Complaint header spacing */
+    .complaint-header{
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    /* Action buttons container (status / priority / restrict) */
+    .complaint-actions{
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        margin-top: 10px;
+    }
+
+    /* Dropdowns (status & priority) */
+    .complaint-actions select{
+        width: 100%;
+        font-size: 0.8rem;
+        padding: 8px;
+        border-radius: 8px;
+    }
+
+    /* Restrict button */
+    .complaint-actions button{
+        width: 100%;
+        font-size: 0.8rem;
+        padding: 10px;
+        border-radius: 10px;
+    }
+
+    /* Restrict input (days input) */
+    .complaint-actions input{
+        width: 100%;
+        font-size: 0.8rem;
+        padding: 8px;
+    }
+
+    /* If buttons are inline in your HTML */
+    button, select, input{
+        max-width: 100%;
+    }
+
+    .status_priority{
+        display: none;
+    }
+
+    .mobile_actions{
+        display: block;
+    }
+    
+
+    .status_priority{
+    max-height: 0;
+    overflow: hidden;
+    transition: all 0.4s ease;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+/* when open */
+.status_priority.show{
+    max-height: 300px;
+    margin-top: 5px;
+}
+
+/* mobile button */
+.mobile_actions{
+    /* background: #333; */
+    color: rgb(0, 0, 0);
+    padding: 6px 10px;
+    border-radius: 8px;
+    font-size: 0.8rem;
+    cursor: pointer;
+    font-size: larger;
+    font-weight: bolder;
+    position: relative;
+    right: -90px;
+    /* top: -25px; */
+}
+
+/* hide button after click */
+.mobile_actions.hide{
+    display: none;
+}
+
+}
+
+@media (min-width:1026px){
+    .dashboard{
+        display: block !important;
+    }
+
+    .modal-content{
+        width: 800px;
+    }
+
+
 }
